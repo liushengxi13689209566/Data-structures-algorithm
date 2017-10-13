@@ -9,8 +9,11 @@
 #include<stdlib.h>
 #include<string.h>
 #include <unistd.h>
+#define ROW 5
+#define COL 5
+
 int m,n ;
-int integer[1000][1000];
+int integer[ROW][COL];
 int  print(int integer[m][n],int x,int y);
 
 int dir[4][2]={
@@ -34,7 +37,7 @@ int check(int x,int y)
 int dfs(int x,int y) //已经踏到了  x , y 
 {
     int xx,yy ,i ;
-    sleep(2);
+    sleep(1);
     printf("\033c");
     print(integer,x,y);
     for(i= 0;i< 4 ;i++)   // 4 个方向 
@@ -45,9 +48,11 @@ int dfs(int x,int y) //已经踏到了  x , y
         {
             visted[xx][yy]= 1 ;
             dfs(xx,yy) ;
-            visted[xx][yy] = 0 ;
+            //visted[xx][yy] = 0 ;
         }
     }
+    printf("\033c");
+    print(integer,x,y);
     return 0;
 }
 
@@ -66,7 +71,6 @@ int print(int integer[m][n],int x,int y)
         printf("\n\n");
     }
 }
-
 int main(void)
 {
     int i,j ;
@@ -77,16 +81,6 @@ int main(void)
     for(i= 0; i< m ;i++ )
         for(j= 0 ;j< n ;j++)
             scanf("%d",&integer[i][j]);  //输入二维数组
-    /*for(i= 0; i< m ;i++ )
-    {    
-        for(j= 0 ;j< n ;j++)
-                printf("\t%d\t",integer[i][j]);  //输入二维数组
-    printf("\n");
-    }
-    exit(-1);*/
-
-    print(integer,0,0);
-
     for(i= 0 ;i< m;i++)
     {
         for(j= 0;j< n ;j++)
