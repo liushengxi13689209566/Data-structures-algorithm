@@ -9,12 +9,21 @@
 #include<stdlib.h>
 #include<string.h>
 #include <unistd.h>
-#define ROW 5
-#define COL 5
+#define ROW 9
+#define COL 9
 
-int m,n ;
-int integer[ROW][COL];
-int  print(int integer[m][n],int x,int y);
+int integer[ROW][COL]={
+    {1,0,1,1,1,1,1,1,1},
+    {1,0,1,1,1,0,0,0,1},
+    {1,0,0,0,0,0,1,0,1},
+    {1,0,1,1,1,0,1,0,1},
+    {1,0,1,0,0,0,1,0,1},
+    {1,0,1,1,1,0,1,0,1},
+    {1,0,0,0,0,1,1,0,1},
+    {1,0,1,1,1,1,1,0,0},
+    {1,1,1,1,1,1,1,1,1}
+};
+int  print(int integer[ROW][COL],int x,int y);
 
 int dir[4][2]={
 {1,0},{-1,0},
@@ -22,14 +31,15 @@ int dir[4][2]={
 }  ;     //方向数组,代表 4 个方向
 
 int visted[120][120] ;    //  1  代表访问过  0 代表没有访问过
+int temp[120][120];      //保存所能走的路径下标
 
 int check(int x,int y)
 {
-    if(x< 0 || y<0 || x>=m || y>=n)  
+    if(x< 0 || y<0 || x>= ROW || y>= COL)  
         return 0;
     if(visted[x][y])
         return 0;
-    if(integer[x][y]!= 0 )
+    if(integer[x][y] !=  0 )
         return 0;
     return 1;
 }
@@ -40,6 +50,8 @@ int dfs(int x,int y) //已经踏到了  x , y
     sleep(1);
     printf("\033c");
     print(integer,x,y);
+    if(x == 7 && y == 8 )
+        return  0;
     for(i= 0;i< 4 ;i++)   // 4 个方向 
     {
         xx =  x + dir[i][0];
@@ -48,7 +60,7 @@ int dfs(int x,int y) //已经踏到了  x , y
         {
             visted[xx][yy]= 1 ;
             dfs(xx,yy) ;
-            //visted[xx][yy] = 0 ;
+            visted[xx][yy] = 0 ;
         }
     }
     printf("\033c");
@@ -56,15 +68,15 @@ int dfs(int x,int y) //已经踏到了  x , y
     return 0;
 }
 
-int print(int integer[m][n],int x,int y)
+int print(int integer[ROW][COL],int x,int y)
 {
     int i,j;
-    for(i=0;i<m ;i++)
+    for(i=0;i<ROW ;i++)
     {
-        for(j=0 ;j<n ;j++)
+        for(j=0 ;j<COL ;j++)
         {
             if(i == x && j == y )
-                printf("  *  ") ;
+                printf("\033[41;32m  *  \033[0m") ;
             else 
                 printf("  %d  ",integer[i][j]);
         }
@@ -74,18 +86,29 @@ int print(int integer[m][n],int x,int y)
 int main(void)
 {
     int i,j ;
-    printf("请输入迷宫的行数与列数：");
+/*    printf("请输入迷宫的行数与列数：");
     scanf("%d%d",&m,&n);
-    getchar();
+    getchar();*/
     memset(visted,0,sizeof(visted));
-    for(i= 0; i< m ;i++ )
+    /*for(i= 0; i< m ;i++ )
         for(j= 0 ;j< n ;j++)
-            scanf("%d",&integer[i][j]);  //输入二维数组
-    for(i= 0 ;i< m;i++)
+            scanf("%d",&integer[i][j]);  //输入二维数组*/
+    
+   /* for(i=0;i<ROW ;i++)
     {
-        for(j= 0;j< n ;j++)
+        for(j=0 ;j<COL ;j++)
         {
-            if(integer[i][j]==  0 && visted[i][j] !=  1 )   //满足返回 1
+            printf("  %d  ",integer[i][j]);
+        }
+        printf("\n\n");
+    }
+    printf("vryrivbibibwebvie\n");*/
+
+    for(i= 0 ;i< ROW;i++)
+    {
+        for(j= 0;j< COL ;j++)
+        {
+            if(integer[i][j] ==  0 && visted[i][j] !=  1 )   //满足返回 1
             {
                 visted[i][j]= 1;
                 dfs(i,j) ; 
