@@ -104,6 +104,7 @@ int main(void)
     char str[MAX];
     int result ;
     printf("Please input the str (please sure it right)\n");
+    //fgets(str,MAX,stdin);
     gets(str);
     printf("You input is %s \n",str);
     result=fun(str);
