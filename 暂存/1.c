@@ -21,11 +21,15 @@ int level(char p)  //规定运算符优先级
     }
     return temp ;
 }
-void cal(int number[] ,int *numberTop ,char Symbol[] ,int *SymbolTop)
+
+void  cal(int number[] ,int *numberTop ,char Symbol[] ,int *SymbolTop)
 {
-    char operation = Symbol[*SymbolTop--]; //出符号
-    int value1=number[*numberTop--];
-    int value2=number[*numberTop--];
+    char operation = Symbol[*SymbolTop]; //出符号
+    (*SymbolTop)--;
+    int value1=number[(*numberTop)];
+    (*numberTop)--;
+    int value2=number[(*numberTop)];
+    (*numberTop)-- ;
     int temp;
     switch(operation)
     {
@@ -34,11 +38,9 @@ void cal(int number[] ,int *numberTop ,char Symbol[] ,int *SymbolTop)
         case '*':temp =value2*value1; break;
         case '/':temp =value2/value1; break;
     }
-    *numberTop++;
+    (*numberTop)++;
     number[*numberTop]=temp ;
-    return 0;
 }
-
 int fun(char str[])
 {
     char  Symbol[MAX];
@@ -60,9 +62,7 @@ int fun(char str[])
         else if((str[i] > '9' ||  str[i] < '0') && str[i] != '(' && str[i] != ')' ){   //不是数字,排除左,右括号的情况
             while(level(str[i]) <= level(Symbol[SymbolTop]))  //让栈中比它大的和等于它的都出栈！！！中缀表达式转后缀表达式的核心
                                                             //从符号栈中出一个符号，从数值栈中出两个数字，计算后压入数值栈
-            {
                 cal(number,&numberTop,Symbol,&SymbolTop);
-            }
             Symbol[++SymbolTop] = str[i];
             i++;
         }
@@ -80,7 +80,7 @@ int fun(char str[])
     // 将Symbol 栈检查一下，返回number 的栈顶，结束
     }
    while(Symbol[SymbolTop] != '@'){
-             cal(number,&numberTop,Symbol,&SymbolTop);
+            cal(number,&numberTop,Symbol,&SymbolTop);
    }
     return number[numberTop];
 }
@@ -89,6 +89,7 @@ int main(void)
     char str[MAX];
     int result ;
     printf("Please input the str (please sure it right)\n");
+//    fgets(str,MAX,stdin);
     gets(str);
     printf("You input is %s \n",str);
     result=fun(str);
