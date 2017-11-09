@@ -12,15 +12,15 @@ typedef struct Node {
     char data ;
     struct Node * Lchild ;
     struct Node * Rchild ;
-}BiNode ,*BiTree ; //感觉主要是树上的BiTree复杂了
+}BiNode ; 
 
 typedef struct temp{
-    BiTree ptr;
-    int tag ;    //标记是左子树进栈的还是右子树进栈的
+    BiNode *ptr;
+    int tag ;
     struct temp *next ;
 }SeqStack;
 
-void CreteBitree(BiTree *root)  
+void CreteBitree(BiNode **root)  
 {
     char ch ;
     cin >> ch ;
@@ -30,7 +30,7 @@ void CreteBitree(BiTree *root)
         *root= NULL;
     else {
         //cout  << ch << endl ;
-        *root = (BiTree)malloc(sizeof(BiNode));
+        *root = (BiNode *)malloc(sizeof(BiNode));
         (*root)->data = ch;
         CreteBitree(&(*root)->Lchild);
         CreteBitree(&(*root)->Rchild);
@@ -42,23 +42,29 @@ void InitSeqStack(SeqStack **S)  //开始创建链表 ,S 就是头节点
     *S = (SeqStack *)malloc(sizeof(SeqStack));
     (*S)->next = NULL ;
 }
-void Push(SeqStack *S,BiTree p,int flag)
+
+void Push(SeqStack *S,SeqStack p)
 {
     SeqStack *temp ;
-    temp = (SeqStack *)malloc(sizeof(SeqStack));
-    temp->tag = flag; //标志
-    temp-> ptr = p;
+    temp=(SeqStack *)malloc(sizeof(SeqStack));
+    temp->tag = p.tag ;
+    temp->ptr = p.ptr ;
+    //cout << "11111" << endl ;
     temp->next = S->next ;
     S->next = temp ;
 }
 
-void Pop(SeqStack *S ,BiTree *p)
+SeqStack Pop(SeqStack *S ,SeqStack p)
 {
     SeqStack *t ;
+
+    //cout << "222222" << endl ;
     t= S->next ;
-    *p = t->ptr ;
+    p.ptr = t->ptr ;
+    p.tag = t->tag ;
     S->next = t->next ;
     free(t);
+    return p ;
 }
 int IsEmpty(SeqStack *S)
 {
@@ -66,65 +72,56 @@ int IsEmpty(SeqStack *S)
         return 1;
     else return 0;
 }
-
-void PostOrder_with_stack(BiTree root)
+void PreOrder(BiNode *root)
 {
     SeqStack *S;
-    BiTree p ;
-    int flag = 0  ;
+    SeqStack p ;
     InitSeqStack(&S); 
-    p = root ;
-    while(p != NULL || !IsEmpty(S) )
+    p.ptr = root ;
+    while(p.ptr != NULL || !IsEmpty(S) )
     {
-        while(p != NULL ) //都是在左子树
+        while(p.ptr != NULL )
         {
             //入栈
-            Push(S,p,flag);
-            cout << S->next->ptr->data  <<  "   " ;
-            cout << S->next->tag  << endl ;
-
-            p = p->Lchild;
-            flag= 0 ;
+            p.tag= 0 ;
+            Push(S,p);
+            p.ptr=p.ptr->Lchild;
         }
         if(!IsEmpty(S))
         {
-            cout << S->next->tag << endl ;
-            if(S->next->tag == 1){
-                cout << "111111" << endl ;
-                Pop(S,&p);
-                cout << p->data ;
+            p=Pop(S,p);
+    //cout << "3333333" << endl ;
+            if(p.tag == 0 ){
+                p.tag = 1;
+                Push(S,p);
+                p.ptr=p.ptr->Rchild;
             }
-            else {
-                cout << "222222" << endl ;
-                flag =  1;
-
-                p=S->next->ptr->Rchild ;
-                cout << p->data << endl ;
+            else{
+                cout << p.ptr->data ;
+                p.ptr = NULL  ; // 这是为什么？？
             }
         }
     }
     cout << endl ;
 }
-
-void PostOrder(BiTree root) //BiTree 就是 BiNode*    后序遍历
+void InOrder(BiNode *root) //BiTree 就是 BiNode*    后序遍历
 {
     if(root)
     {
-        PostOrder(root->Lchild);
-        PostOrder(root->Rchild);
+        InOrder(root->Lchild);
+        InOrder(root->Rchild);
         cout << root->data ;
     }
 }
-
 int main(void)
 {
-    BiTree root;
+    BiNode *root;
     cout  << "Please input the  string :" << endl ;
 
     CreteBitree(&root);
-    //PostOrder(root);
-    //cout << endl ;
-    PostOrder_with_stack(root);  
+    InOrder(root);
+    cout << endl ;
+    PreOrder(root);  
     return 0;
 }
 
