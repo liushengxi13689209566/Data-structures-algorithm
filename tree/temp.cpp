@@ -7,9 +7,7 @@ using std::vector;
 using std::cout;  
 using std::endl;  
 using std::max;  
-  
-
-  
+ 
 struct TreeNode  
 {  
   TreeNode *left;  
@@ -43,7 +41,7 @@ static void PrintWhiteSpaces(int num)
     cout << " ";  
 }  
   
-void PrintNode(vector<TreeNode*> &nodes, int level, int max_level)  
+void PrintNode(vector<TreeNode*> &nodes, int level, int max_level)  // level== 1 ,把vector 传过去 
 {  
   if(nodes.empty() || IsAllElementsNULL(nodes)) return; // exit  
   
@@ -104,14 +102,14 @@ void PrintNode(vector<TreeNode*> &nodes, int level, int max_level)
 // wrapper function  
 void PrintBinaryTree(TreeNode *root)  
 {  
-  int max_level = MaxLevel(root);  
-  vector<TreeNode*> nodes;  
+    int max_level = MaxLevel(root); 
+    cout << "数的层数 ： "  << max_level << endl ;
+    vector<TreeNode*> nodes;  
     
-  nodes.push_back(root);  
+    nodes.push_back(root);  
    
   PrintNode(nodes, 1, max_level);  
 }  
-  
 
 int main(void)  
 {  

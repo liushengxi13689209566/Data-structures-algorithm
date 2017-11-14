@@ -6,7 +6,6 @@
  ************************************************************************/
 
 #include<iostream>
-#include <limits> // 为了使用numeric_limits
 #define MAX 512
 using namespace std;
 
@@ -14,42 +13,49 @@ typedef struct Node {
     char data ;
     struct Node * Lchild ;
     struct Node * Rchild ;
-} BiNode ,*BiTree ; //感觉主要是树上的BiTree复杂了
+} BiNode ;
 
-void CreteBitree(BiTree *root)  
+/*void CreteBitree(BiNode **root)  
 {
     char ch ;
-    //cin >> ch ;
-    scanf("%c",&ch);
+    cin >> ch ;
     if( ch == '#' ) 
         *root= NULL;
     else {
-        cout  << ch << endl ;
-        *root = (BiTree)malloc(sizeof(BiNode));
+        *root = (BiNode *)malloc(sizeof(BiNode));
         (*root)->data = ch;
         CreteBitree(&(*root)->Lchild);
         CreteBitree(&(*root)->Rchild);
     }
-}
+}*/
 
-/*BiTree CreteBitree()  
+BiNode * CreteBitree()  
 {
     BiNode *p;
     char ch ;
     cin >> ch ;
-    if(ch  == '^') 
+    if(ch  == '#') 
         return NULL;
     else {
-        cout  << ch << endl ;
         p= (BiNode *)malloc(sizeof(BiNode));
-        p->data = ch  ;
-        p->Lchild=CreteBitree();
+        p->Lchild->data = ch  ;
+        p=CreteBitree();
         p->Rchild=CreteBitree();
     }
     return p; //p is root 
-}*/
+}
 
-void InOrder(BiTree root) //BiTree 就是 BiNode*    中序遍历
+void PreOrder(BiNode *root)    //  先序遍历
+{
+    if(root)
+    {
+        cout << root->data ;
+        PreOrder(root->Lchild);
+        PreOrder(root->Rchild);
+    }
+}
+
+void InOrder(BiNode  *root) //  中序遍历
 {
     if(root)
     {
@@ -58,15 +64,30 @@ void InOrder(BiTree root) //BiTree 就是 BiNode*    中序遍历
         InOrder(root->Rchild);
     }
 }
-
+void PostOrder(BiNode *root) // 后序遍历
+{
+    if(root)
+    {
+        PostOrder(root->Lchild);
+        PostOrder(root->Rchild);
+        cout << root->data ;
+    }
+}
 int main(void)
 {
-    BiTree root;
+    BiNode *root;
     cout  << "Please input the  string :" << endl ;
 
-    CreteBitree(&root);
-//    root = CreteBitree();
+//    CreteBitree(&root);
+    root = CreteBitree();
+    cout<< "递归！！！先序遍历：" << endl ;
+    PreOrder(root);
+    cout << endl;
+    cout<< "中序遍历：" << endl ;
     InOrder(root);
+    cout << endl;
+    cout<< "后序遍历：" << endl ;
+    PostOrder(root);
     cout << endl ;
     return 0;
 }

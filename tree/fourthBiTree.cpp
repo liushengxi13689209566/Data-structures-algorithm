@@ -24,12 +24,9 @@ void CreteBitree(BiNode **root)
 {
     char ch ;
     cin >> ch ;
-    //cout << ch ;
-    //scanf("%c",&ch);
     if( ch == '#' ) 
         *root= NULL;
     else {
-        //cout  << ch << endl ;
         *root = (BiNode *)malloc(sizeof(BiNode));
         (*root)->data = ch;
         CreteBitree(&(*root)->Lchild);
@@ -72,7 +69,7 @@ int IsEmpty(SeqStack *S)
         return 1;
     else return 0;
 }
-void PreOrder(BiNode *root)
+void PostOrder_with_stack(BiNode *root)
 {
     SeqStack *S;
     SeqStack p ;
@@ -104,24 +101,15 @@ void PreOrder(BiNode *root)
     }
     cout << endl ;
 }
-void InOrder(BiNode *root) //BiTree 就是 BiNode*    后序遍历
-{
-    if(root)
-    {
-        InOrder(root->Lchild);
-        InOrder(root->Rchild);
-        cout << root->data ;
-    }
-}
+
 int main(void)
 {
     BiNode *root;
     cout  << "Please input the  string :" << endl ;
 
     CreteBitree(&root);
-    InOrder(root);
-    cout << endl ;
-    PreOrder(root);  
+    cout << "非递归！！！后序遍历：" << endl;
+    PostOrder_with_stack(root);  
     return 0;
 }
 
