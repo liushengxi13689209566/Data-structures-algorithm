@@ -12,7 +12,7 @@ typedef struct Node {
     char data ;
     struct Node * Lchild ;
     struct Node * Rchild ;
-}BiNode ,*BiTree ; //感觉主要是树上的BiTree复杂了
+}BiNode ,*BiTree ;
 
 typedef struct temp{
     BiTree ptr;
@@ -32,8 +32,7 @@ void CreteBitree(BiTree *root)
         CreteBitree(&(*root)->Rchild);
     }
 }
-
-void InitSeqStack(SeqStack **S)  //开始创建链表 ,S 就是头节点
+void InitSeqStack(SeqStack **S)     // 用链表来实现一个栈
 {
     *S = (SeqStack *)malloc(sizeof(SeqStack));
     (*S)->next = NULL ;
@@ -61,7 +60,7 @@ int IsEmpty(SeqStack *S)
         return 1;
     else return 0;
 }
-void InOrder(BiTree root)
+void InOrder(BiTree root) //中序
 {
     SeqStack *S;
     BiTree p ;
@@ -84,7 +83,7 @@ void InOrder(BiTree root)
     }
     cout << endl ;
 }
-void PreOrder(BiTree root)
+void PreOrder(BiTree root) //先序
 {
     SeqStack *S;
     BiTree p ;
@@ -121,8 +120,6 @@ int main(void)
     cout << "非递归！！！中序：" << endl ;
     InOrder(root); 
     cout << endl;
-
-
     return 0;
 }
 

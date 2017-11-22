@@ -18,7 +18,6 @@ typedef struct HtNode{
 }HtNode;
 void select_1(HtNode ht[] ,int n,int *s1_p ,int *s2_p);
 void print(HtNode ht[],int m);
-
 void CreateHuffMan(HtNode *ht,int W[],int n)
 {
     int m=2*n-1;   //总共有m个结构体数组
@@ -27,13 +26,9 @@ void CreateHuffMan(HtNode *ht,int W[],int n)
     for(int i=n+1; i<=m ; ++i )
         ht[i]={0,0,0,0};
     int s1,s2 ;
-
-    print(ht,m);
-
-
+    //print(ht,m);
     for(int i= n+1 ;i<= m;++i)
     {
-        printf("1111111111\n");
         select_1(ht,i-1,&s1,&s2);
         ht[i].weight = ht[s1].weight + ht[s2].weight;
         ht[i].Lchild = s1 ;
@@ -42,47 +37,28 @@ void CreateHuffMan(HtNode *ht,int W[],int n)
         ht[s2].parent = i;
     }
 }
-
 void select_1(HtNode ht[] ,int n,int *s1_p ,int *s2_p) //考虑平率重复的情况
 {
     int min  ; //最小值
     int Next_min  ; //次小值
-
-    /*min = ht[1].weight;
-    Next_min = ht[2].weight ; //如果min 与Next_min 相同该如何处理
-    *s1_p =1;
-    *s2_p = 2;*/
-    int  flag =  1 ;
-    for(int i = 1;i <= n;++i)
+    min = 2147483647 ;
+    Next_min = 2147483647;
+    *s1_p = *s2_p = 0;
+    for(int i= 1 ;i<= n;++i)
     {
-        if(ht[i].parent == 0 && flag )
+        if(ht[i].parent == 0)
         {
-            min= ht[i].weight;
-            flag = 0;
-        }
-        else if(ht[i].parent == 0 )
-        {
-            if(ht[i].weight < min) 
+            if(ht[i].weight < min )  
             {
+                Next_min = min ;
                 min= ht[i].weight;
-                *s1_p =  i;
+                *s2_p = *s1_p;
+                *s1_p = i;   //存储下标
             }
-        }
-    }
-    flag = 1;
-    for(int i = 1;i <= n;++i)
-    {
-        if(ht[i].parent == 0 && flag )
-        {
-            Next_min = ht[i].weight;
-            flag = 0;
-        }
-        else if(ht[i].parent == 0 && ht[i].weight != min );
-        {
-            if(ht[i].weight < Next_min ) 
+            else if(ht[i].weight <= Next_min )
             {
-                Next_min= ht[i].weight;
-                *s2_p =  i;
+                Next_min = ht[i].weight;
+                *s2_p = i;
             }
         }
     }
@@ -105,7 +81,7 @@ int main(void)
     cin >> n ;
     int j ;
     for(int i = 1; i<= n ;i++){
-        cout <<  "输入平率：" << endl;
+        cout <<  "输入所对应的频率：" << endl;
         cin >> j ;
         W[i] = j ;
     }
