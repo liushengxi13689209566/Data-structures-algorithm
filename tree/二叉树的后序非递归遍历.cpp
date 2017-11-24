@@ -46,7 +46,6 @@ void Push(SeqStack *S,SeqStack p)
     temp=(SeqStack *)malloc(sizeof(SeqStack));
     temp->tag = p.tag ;
     temp->ptr = p.ptr ;
-    //cout << "11111" << endl ;
     temp->next = S->next ;
     S->next = temp ;
 }
@@ -54,8 +53,6 @@ void Push(SeqStack *S,SeqStack p)
 SeqStack Pop(SeqStack *S ,SeqStack p)
 {
     SeqStack *t ;
-
-    //cout << "222222" << endl ;
     t= S->next ;
     p.ptr = t->ptr ;
     p.tag = t->tag ;

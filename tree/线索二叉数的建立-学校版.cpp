@@ -4,10 +4,10 @@
 	> Mail: 
 	> Created Time: 2017年11月22日 星期三 21时29分24秒
  ************************************************************************/
-// 1 表示线索
-// 0 表示有子树
+
 #include<iostream>
 using namespace std;
+
 typedef struct Node {
     char data ;
     int Ltag ;
@@ -34,25 +34,37 @@ void CreteBitree(BiNode **root)
     }
 }
 
-void visit(BiNode *t)
+BiNode *InNext(BiNode *p)
 {
-    cout << t->data << "   ";
+    BiNode *q = NULL ;
+    BiNode *next = NULL ;
+    if(p->Rtag == 1)
+        next=p->Rchild ;
+    else {
+        for(q = p->Rchild ; q->Ltag == 0 ;q=q->Lchild)
+            next =q;
+    }
+    return next ;
 }
 
-void TinOrder(BiNode *t) //中序遍历
+BiNode *Infrist(BiNode *bt)
 {
-    BiNode *p = t->Lchild ;
-    while(p != t)
+    BiNode *temp =bt ;
+    if(temp == NULL )
+        return NULL;
+    while(temp->Ltag == 0)
+        temp = temp->Lchild;
+    return temp ;
+}
+
+void TinOrder(BiNode *root) //中序遍历
+{
+    BiNode *p;
+    p= Infrist(root);
+    while(p != NULL)
     {
-        while(p->Ltag  ==  0)
-            p=p->Lchild;
-        visit(p);
-        while(p->Rtag == 1 && p->Rchild != t)
-        {
-            p=p->Rchild;
-            visit(p);
-        }
-        p=p->Rchild;
+        cout << p->data  << endl ;
+        p=InNext(p);
     }
 }
 
@@ -61,12 +73,12 @@ void Inthread(BiNode  *root) //  中序线索化
     if(root)
     {
         Inthread(root->Lchild);
-        if(root->Lchild == NULL) //左为空
+        if(root->Lchild == NULL)
         {
             root->Lchild = pre ;
             root->Ltag = 1;
         }
-        if( pre->Rchild == NULL) //右为空
+        if(pre != NULL && pre->Rchild == NULL)
         {
             pre->Rchild = root ;
             pre->Rtag = 1;
@@ -75,40 +87,40 @@ void Inthread(BiNode  *root) //  中序线索化
         Inthread(root->Rchild);
     }
 }
-
-void function(BiNode **temp ,BiNode *root)
+/*void InOrder(BiNode  *root) //  中序遍历
 {
-    *temp = (BiNode *)malloc(sizeof(BiNode));
-    (*temp)->Ltag = 0;
-    (*temp)->Rtag = 1 ;
-    (*temp)->Rchild = *temp ;
-    if(!root)
+    if(root)
     {
-        (*temp)->Lchild = *temp ;
+        InOrder(root->Lchild);
+        cout << root->data <<  "  ";
+        cout << root->Ltag <<  "  ";
+        cout << root->Rtag <<  "  ";
+        InOrder(root->Rchild);
     }
-    else {
-        (*temp)->Lchild = root ;
-        pre = *temp ;
-        Inthread(root);
-        pre->Rchild = *temp ;
-        pre->Rtag = 1;
-        (*temp)->Rchild = pre ;
-    }
+    cout << endl ;
+}*/
+void InitPre(BiNode *root)
+{
+    pre = (BiNode *)malloc(sizeof(BiNode));
+    pre->Ltag = 0;
+    pre->Lchild = pre ;
+    pre->Rtag = 0;
+    pre->Rchild = root ;
 }
 
 int main(void)
 {
-    BiNode *root ,*temp;  //设置p的好处就是双向链表
+    BiNode *root;
     cout  << "Please input the  string :" << endl ;
 
     CreteBitree(&root);
-
     cout<< "中序线索化：" << endl ;
-    function(&temp,root);
-    cout << endl ;
+    InitPre(root);
+    Inthread(root);
+    cout << endl;
 
-    TinOrder(temp);
-    cout << endl ;
+    //InOrder(root);
 
+    TinOrder(root);
     return 0;
 }

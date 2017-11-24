@@ -83,7 +83,7 @@ void LevelOrder(BiNode *root) //层次遍历
     }
     cout << endl ;
 }
-void PostOrder(BiNode *root) //后序遍历
+/*void PostOrder(BiNode *root) //后序遍历
 {
     if(root)
     {
@@ -91,7 +91,7 @@ void PostOrder(BiNode *root) //后序遍历
         PostOrder(root->Rchild);
         cout << root->data ;
     }
-}
+}*/
 int main(void)
 {
     BiNode *root;
