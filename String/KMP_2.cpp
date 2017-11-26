@@ -14,42 +14,36 @@ typedef struct {
     int count ;
     char str[MAX];
 }PP ;
-
-// 原则：移动位数 = 已匹配的字符数 - 对应的部分匹配值
-void get_next(PP T , int *next) 
+void  get_next(PP T , int *next) 
 {
-   //printf("2222222222222222\n");
-    int i , j;
-    i= 1;  // 表示后缀
-    j= 0;  // 表示前缀
+    int after , front;
+    after= 1;  // 表示后缀
+    front= 0;  // 表示前缀
     next[1]= 0;
-    while(i <= T.count )
+    while(after <= T.count )
     {
-        if( j== 0 || T.str[i] == T.str[j]){
-            i++;
-            j++;
-            next[i] = j;
+        if( front== 0 || T.str[after] == T.str[front]){
+            after++;
+            front++;
+            next[after] = front;
         }
         else {
-        //j 回溯,关键点
-            j=next[j];
+        //front 回溯,关键点
+            front=next[front];
         }
-    //printf("444444444444444444444\n");
     }
-    //printf("33333333333333\n");
 }
 // 返回字串T 在主串S中的位置，不存在返回 0 
 int  index_kmp(PP S ,PP T, int pos )  
 {
-    printf("1111111111111\n");
     int i = pos;
     int j =  1;
     int  next[MAX] ;
 
     get_next(T,next);
 
-    for(int  i= 1;i<= T.count ; ++i)
-        printf("next[%d] ==%d\n",i,next[i]);
+    /*for(int  i= 1;i<= T.count ; ++i)
+        printf("next[%d] ==%d\n",i,next[i]);*/
     // next 是数组正确
 
     while(i <= S.count  && j<= T.count)
@@ -67,7 +61,6 @@ int  index_kmp(PP S ,PP T, int pos )
     else 
         return 0;
 }
-
 //前缀是固定的，二后缀是相对的
 int main(void)
 {
