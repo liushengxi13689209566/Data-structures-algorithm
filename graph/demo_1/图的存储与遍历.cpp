@@ -55,6 +55,7 @@ int main(void)
 
     map.resetNode();
     map.BFS(0);
+    cout << endl ;
 
     return 0;
 }

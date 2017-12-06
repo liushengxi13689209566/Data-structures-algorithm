@@ -15,20 +15,22 @@ typedef struct HtNode{
     int parent;
     int Lchild;
     int Rchild;
+    char str ;
 }HtNode;
 
 typedef char *  HuffManCode[N+1];  //HuffManCode === char *[N+1]
-HuffManCode hc;
+HuffManCode hc ;
 
 void select_1(HtNode ht[] ,int n,int *s1_p ,int *s2_p);
 void print(HtNode ht[],int m);
-void CreateHuffMan(HtNode *ht,int W[],int n)
+
+void CreateHuffMan(HtNode *ht,int W[],int n,char *t)
 {
     int m=2*n-1;   //总共有m个结构体数组
     for(int i=1;i<= n;++i)
-        ht[i]={W[i],0,0,0};
+        ht[i]={W[i],0,0,0,t[i]};
     for(int i=n+1; i<=m ; ++i )
-        ht[i]={0,0,0,0};
+        ht[i]={0,0,0,0,'\0'};
     int s1,s2 ;
     for(int i= n+1 ;i<= m;++i)
     {
@@ -70,7 +72,7 @@ void print(HtNode ht[],int m)
 {
     printf("\t weight  parent Lchild Rchild\n");
     for(int i= 1 ;i<= m;++i){
-        printf("\t%d  %d  %d  %d \n",ht[i].weight,ht[i].parent ,ht[i].Lchild,ht[i].Rchild);
+        printf("\t%d  %d  %d  %d %c  \n",ht[i].weight,ht[i].parent ,ht[i].Lchild,ht[i].Rchild,ht[i].str);
     }
 }
 void encode(HtNode *ht,HuffManCode hc,int n) //n个叶子节点
@@ -99,28 +101,58 @@ void encode(HtNode *ht,HuffManCode hc,int n) //n个叶子节点
     free(cd);
 }
 
-void deCode(HuffManCode hc,HtNode *ht)   //译码
-{
 
+
+void deCode(HuffManCode hc,HtNode *ht,int n)   //译码
+{
+    cout << "111111" << endl ;
+    int index ;
+    for(int i= 1;i<= n;++i)  //遍历hc
+    {
+        index = 2*n-1 ; //从根节点开始
+        //cout << "index == " << index << endl ;
+        //cout << "hc[i] == " << hc[i] << endl ;
+        for(int j= 0; hc[i][j]; ++j)
+        {
+        //cout << "hc[i][j] == " << hc[i][j] << endl ;
+            if(hc[i][j] == '0'){
+                index = ht[index].Lchild ;
+            }
+            else {
+                index = ht[index].Rchild ;
+            }
+        }
+        cout << ht[index].str << endl ;
+    }
 }
+
 
 int main(void)
 {
     HtNode HuffMan[M+1]={0};
     int W[N]={0};
+    char t[N];
     int n;
+
     cout << "请输入有几种类型：" << endl ;
     cin >> n ;
     int j ;
     for(int i = 1; i<= n ;i++){
-        cout <<  "输入所对应的频率：" << endl;
+        cout <<  "输入所对应的频率 和 字符 ：" << endl;
+
         cin >> j ;
         W[i] = j ;
+
+        cin >> t[i] ;
     }
-    CreateHuffMan(HuffMan,W,n);
+    CreateHuffMan(HuffMan,W,n,t );
     print(HuffMan,2*n-1);
+
     encode(HuffMan,hc,n);
+    deCode(hc,HuffMan,n);
+
     for(int i = 1;i<= n;++i)
         cout <<  W[i] << " : "<< hc[i] << endl;
+
     return 0;
 }

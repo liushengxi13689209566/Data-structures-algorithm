@@ -19,6 +19,20 @@ class Node{      //此类表示顶点
     bool visted ; //保存是否被访问
 };
 
+
+
+
+
+
+class Edge{
+    public:
+        Edge(int )
+    private:
+        int start; //无向与有向
+        int end ;
+        int weight ; 
+        bool selected ;
+};
 class Map{
     public:
     Map(int MAX) ;
@@ -34,13 +48,13 @@ class Map{
 
     void DFS(int NodeIndex);  //递归
 
-    void DFS_next(int NodeIndex);  //非递归
+    //void DFS_next(int NodeIndex);  //非递归
 
 
-    void RealBFS(vector<int> TempVec) ;
+    void RealBFS(std::vector<int> TempVec) ;
     void BFS(int NodeIndex);  //递归
     
-    void BFS_next(int NodeIndex);  // 非递归
+    //void BFS_next(int NodeIndex);  // 非递归
 
     int MaxVertexCount ;
     int AlreadyInCount ;

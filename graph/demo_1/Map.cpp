@@ -66,11 +66,6 @@ void Map::printNode()
         cout << pNodeArray[i].m_cData   << "  "  << pNodeArray[i].visted   << endl ;
     cout << endl ;
 }
-/*void Map::DFS()
-{
-    for(int i =0 ;i != AlreadyInCount ;++i)
-        DFS_next(i);
-}*/
 void Map::DFS(int NodeIndex)
 {
     cout << pNodeArray[NodeIndex].m_cData   << " ";
@@ -82,32 +77,33 @@ void Map::DFS(int NodeIndex)
           if(pMartrix[MaxVertexCount*NodeIndex+i] != 0)
           {
               if(pNodeArray[i].visted == false )
-                  DFS_next(i);
+                  DFS(i);
           }
     }
 }
 void Map::RealBFS(vector<int> TempVec)
 {
     vector<int> CurVec ;
-    for(auto i= 0 ; i != TempVec.size();++i)
+    //cout << "TempVec.size == " << TempVec.size() <<  endl ;
+    for(auto i= 0 ; i != TempVec.size() ; ++i )
     {
-        for(int j=0;j != AlreadyInCount ;++j)
+       // cout << "遍历 Temp  vector ："  << TempVec[i] << endl ;
+        for(int j= 0 ;j != AlreadyInCount ;++j)
         {
-            if(pMartrix[i*MaxVertexCount+j] == 1 && pNodeArray[j].visted == false )
+            //cout << "pMartrix[i*MaxVertexCount+j] == " <<  pMartrix[i*MaxVertexCount+j] << endl ;
+            if(pMartrix[TempVec[i]*MaxVertexCount+j] == 1 && pNodeArray[j].visted == false )
             {
-                cout << pNodeArray[i].m_cData << "  " ;
-                pNodeArray[i].visted = true ;
+                cout << pNodeArray[j].m_cData << "  " ;
+                pNodeArray[j].visted = true ;
+
                 CurVec.push_back(j);
             }
         }
     }
-    if(CurVec.size() == 0 )
-        return ;
-    else {
+    if(CurVec.size() != 0 )
         RealBFS(CurVec);
-    }
+    
 }
-
 void Map::BFS(int NodeIndex)  // NodeIndex = 0 
 {
     cout <<  pNodeArray[NodeIndex].m_cData  << "  ";

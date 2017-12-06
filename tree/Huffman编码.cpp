@@ -10,6 +10,7 @@ using namespace std;
 //备注：数组一切以1 开始
 #define N 30
 #define M 2*N-1
+
 typedef struct HtNode{
     int weight;
     int parent;
@@ -73,11 +74,12 @@ void print(HtNode ht[],int m)
         printf("\t%d  %d  %d  %d \n",ht[i].weight,ht[i].parent ,ht[i].Lchild,ht[i].Rchild);
     }
 }
-void encode(HtNode *ht,HuffManCode hc,int n) //n个叶子节点
+
+void encode(HtNode *ht,HuffManCode hc,int n)  //n个叶子节点
 {
     char *cd;
     int start;
-    int c,p;
+    int c,p ;
     cd = (char *)malloc(n*sizeof(char));
     cd[n-1]='\0';
     for(int i= 1;i<= n;++i) //循环所有的叶子节点
