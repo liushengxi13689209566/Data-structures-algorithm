@@ -18,47 +18,43 @@ class Node{      //此类表示顶点
     char m_cData ;
     bool visted ; //保存是否被访问
 };
-
-
-
-
-
-
-class Edge{
+class Edge{   //表示边
     public:
-        Edge(int )
-    private:
-        int start; //无向与有向
-        int end ;
+        Edge(int  A = 0 ,int B = 0,int w = 0);
+        int indexA;  //无向与有向
+        int indexB;
         int weight ; 
         bool selected ;
 };
-class Map{
+class Map{     //图
     public:
     Map(int MAX) ;
     ~Map();
-    //bool addNode(Node *p);
+   
     bool addNode(char ch);
 
     void resetNode();
     bool setValToDirectedGraph(int row,int col,int val = 1);
     bool setValToUndirectedGraph(int row,int col,int val = 1);
+
+    bool getValueFromMartix(int row,int col,int &val);
+
     void printMartrix();
     void printNode();
-
-    void DFS(int NodeIndex);  //递归
-
-    //void DFS_next(int NodeIndex);  //非递归
 
 
     void RealBFS(std::vector<int> TempVec) ;
     void BFS(int NodeIndex);  //递归
     
-    //void BFS_next(int NodeIndex);  // 非递归
+    
+    void primTree(int nodeIndex);
+    int getMinEdge(std::vector<Edge>  edgeVec);
 
+    private:
     int MaxVertexCount ;
     int AlreadyInCount ;
     Node *pNodeArray;
     int *pMartrix;
+    Edge *pEdge ;
 };
 #endif
