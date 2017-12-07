@@ -5,8 +5,8 @@
 	> Created Time: 2017年11月18日 星期六 14时08分39秒
  ************************************************************************/
 #include<iostream>
-#include<string.h>
-#include<stdio.h>
+#include<string.h> //为了使用memset 函数
+#include<stdio.h> 
 using namespace std;
 
 #define N  128  //常用字符128 
@@ -17,15 +17,16 @@ typedef struct HtNode{
     int parent;
     int Lchild;
     int Rchild;
-    char str ; //叶子节点保存原始字符
+    char str;   //叶子节点保存原始字符
 }HtNode;
 
 typedef struct {
-    int W[N] ;       //用来统计各个字符的权值
+    int W[N] ;       //用来统计各个字符的权值，即出现的频率，即次数
     char ch[N] ;      //用来保存字符
     int typeNumber ;  //有多少种字符就会开辟多大的结构体数组啊
 }TT ;
-int n ;
+
+int n ; //代表有多少个叶子节点
 
 typedef char *  HuffManCode[N+1];  //HuffManCode === char *[N+1]
 HuffManCode hc ;
@@ -40,7 +41,6 @@ void CreateHuffMan(HtNode *ht,TT t)
         ht[i]={t.W[i],0,0,0,t.ch[i]};
     for(int i= n ; i< m ; ++i )
         ht[i]={0,0,0,0,'\0'};
-    print(ht,m);
     int s1,s2 ;
     for(int i= n  ;i<  m;++i)
     {
@@ -50,7 +50,6 @@ void CreateHuffMan(HtNode *ht,TT t)
         ht[i].Rchild = s2 ;
         ht[s1].parent = i ;
         ht[s2].parent = i;
-    print(ht,m);
     }
 }
 void select_1(HtNode ht[] ,int n,int *s1_p ,int *s2_p) //考虑平率重复的情况
@@ -114,7 +113,6 @@ void encode(HtNode *ht,HuffManCode hc,int n) //n个叶子节点
 
 void deCode(char *yimaStr,HtNode *ht,int n)   //译码
 {
-    //cout << "111111" << endl ;
     int index = 2*n-2 ;
     int tag = 0 ;
     for(int i= 0 ; yimaStr[i] ; ++i)  //遍历
@@ -153,14 +151,11 @@ int main(void)
     memset(&t,0,sizeof(TT));   //初始化用来统计文件中字符的各种变量
     while(fread(temp,1,sizeof(temp),fp) != 0 )  //一直读取完字符
     {
-        printf("temp == %s \n",temp);
-        //printf("555555555555555555\n") ;
         for(int i = 0 ;temp[i] != '\0'; ++i){
             t.ch[temp[i]-'0'] = temp[i];
             t.W[temp[i]-'0']++ ;   //统计各个字符出现频率
         }
     }
-    printf("88888888888888888\n");
     for(int i= 0; i < N ;++i){
         if(t.W[i] != 0 )
             t.typeNumber++;
@@ -168,23 +163,13 @@ int main(void)
     n = t.typeNumber-1 ;   //这是为什么呐？？
 
     TT result;
-
-    printf("n  == %d \n",n);
     int j = 0;
     for(int i= 0; i < N ;++i){
         if(t.W[i] == 0 ) continue;
         result.W[j]= t.W[i];
         result.ch[j]= t.ch[i];
-        //printf("t.W[%d] == %d    ",i,t.W[i]);
-        //printf("t.ch[%d] == %c \n",i,t.ch[i]);
         j++;
     }
-    for(int i= 0; i < n ;++i){
-        printf("temp.W[%d] == %d    ",i,result.W[i]);
-        printf("temp.ch[%d] == %c \n",i,result.ch[i]);
-
-    }
-    
 
     CreateHuffMan(HuffMan,result);
 
@@ -192,8 +177,6 @@ int main(void)
 
     encode(HuffMan,hc,n);
 
-    for(int i = 0; i<  n;++i)
-        cout <<    " : " << hc[i] << endl;
     cout << "\t\t\t 是否使用译码功能 (Y/N) ："   << endl;
     char a;
     cin >> a ;
