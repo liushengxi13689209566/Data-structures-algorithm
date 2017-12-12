@@ -31,7 +31,7 @@ bool Map::setArc(char Node,int index,int weight)//加边
     Edge *p = NULL ;
     for(int i=0;i< MAXNODESIZE;++i){
         if(vertexNode[i].vertexData == Node){
-            p=vertexNode[i].pEdge  ;
+            p=vertexNode[i].head  ;
 
         }
     }

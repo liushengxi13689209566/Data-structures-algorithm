@@ -13,7 +13,7 @@ class vertex{  //顶点
 
     char vertexData ; //顶点数据
     bool visted ;  //顶点是否被访问
-    Edge *pEdge;   //连接边
+    Edge *head ;  //连接边
 };
 class Edge{   //边
     public:
