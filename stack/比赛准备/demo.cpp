@@ -4,7 +4,7 @@
 	> Mail: 
 	> Created Time: 2017年12月13日 星期三 16时59分00秒
  ************************************************************************/
-//#define MAXSIZE  4   会出错
+/*#define MAXSIZE  4   会出错*/
 #define MAXSIZE  10000 
 //每次读取到内存中的最大字节数 
 #include<iostream>
