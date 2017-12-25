@@ -1,0 +1,11 @@
+1, (),OK
+2, ((rg89b3rbkfdnbfnbibndf)()),OK
+3, (a: (bb(joblabx)d)),OK
+4,  (,NOK
+5,  )(,NOK
+6,)()a+b(,NOK
+7,(),OK
+8,()[]{,NOK
+9,    (],NOK
+10,([)],NOK
+11,    irhi hwwnb"[",NOK

@@ -8,9 +8,8 @@
 #include<iostream>
 #include"Map.h"
 using namespace std;
-Map::Map(int temp) //构造函数
+Map::Map() //构造函数
 {
-    MAXNODESIZE = temp ;
     vertexNode = new vertex[MAXNODESIZE]; //顶点数组
     vertexCount = 0 ;
     arcCount = 0;
@@ -19,10 +18,11 @@ Map::~Map()
 {
     delete []vertexNode;
 }
-bool Map::addVertexToVertexNode(char ch)
+bool Map::addVertexToVertexNode(char ch) //加入点
 {
     vertexNode[vertexCount].vertexData  =  ch ;
-    vertexCount++;
+    vertexNode[vertexCount].head = NULL  ;
+    vertexCount++ ;
     return true ;
 }
 

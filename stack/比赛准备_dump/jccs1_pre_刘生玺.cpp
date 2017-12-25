@@ -19,7 +19,6 @@ Solution::Solution(char *argv)
     tag = 0 ;
     leftCount = 0 ;
     rightCount= 0 ;
-    size = 0 ;
 }
 Solution::~Solution()
 {
@@ -70,14 +69,14 @@ void Solution::print(int flag  )
     //str[strlen(str)-1]   就是最后一个有效字符
     //考虑数据行太长，刚刚好读取完的情况
             str[strlen(str)-1] = '\0';
-        printf("%d,%s,%s,%d\n",LineCount,str,"NOK",size);
+        printf("%d,%s,%s\n",LineCount,str,"NOK");
     }
     int tmp = 0;
     if(flag ==  1)  //true
     {
         if(str[strlen(str)-1] == '\n')
             str[strlen(str)-1] = '\0';
-        printf("%d,%s,%s,%d",LineCount,str,"OK",strlen(str));
+        printf("%d,%s,%s",LineCount,str,"OK");
         for(int i= 0;str[i];++i)
         {
             if(str[i] == '(')
@@ -93,7 +92,10 @@ void Solution::print(int flag  )
 bool  Solution::IsValidParentheses()  //判断是否合法
 {
     int count = 0;
-   
+    /*
+    * 要求：
+    * 输出结果为标准输出，每一行的内容为：“行号,源字符串,结果”，
+    * 其中结果为“OK”或者“NOK”，表示合法或不合法。*/
     if(tag <  0 ) //直接错误
     {
         print(0);
@@ -112,23 +114,19 @@ bool  Solution::IsValidParentheses()  //判断是否合法
     }
         stack<char> paren;
         char c ;
-        int i  ;
         int flag = 0 ; // 0 NOk  1 OK 
-        for (i= 0 ;str[i] != '\n' ; ++i ) {
+        for (int i= 0 ;str[i] != '\n' ; ++i ) {
             c = str[i];
             switch ( c  ) {
                 case '(': paren.push(c); break ;
-                case ')': if (paren.empty() || paren.top()!='(') {  size = i+1 ; print(0);return true;}
+                case ')': if (paren.empty() || paren.top()!='(') { print(0);return true;}
                           else paren.pop(); break;
                 
                 default:  ;     // pass
             }
         }
         if(  ! paren.empty() )
-        { 
-            size = i;
             print(0);
-        }
         else 
             print(1);
     return true ;

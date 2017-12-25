@@ -1,0 +1,28 @@
+1, (),OK <data_1></data_1
+2, ((rg89b3rbkfdnbfnbibndf)()),OK <data_1><data_2>rg89b3rbkfdnbfnbibndf</data_2<data_2></data_2</data_1
+3, (a: (bb(joblabx)d)),OK <data_1>a: <data_2>bb<data_3>joblabx</data_3d</data_2</data_1
+4,  (,NOK
+5,  )(,NOK
+6,)()a+b(,NOK
+7,(),OK<data_1></data_1
+8,(),OK<data_1></data_1
+9, (*),OK <data_1>*</data_1
+10, (a(bb())),OK <data_1>a<data_2>bb<data_3></data_3</data_2</data_1
+11,    (x(:D*)**),OK    <data_1>x<data_2>:D*</data_2**</data_1
+12,    )(,NOK
+13,    ((),NOK
+14,,OK
+15,    *)**k)v*)*,NOK
+15,    *)**k)v*)*,NOK
+16,(),OK<data_1></data_1
+17,(()a(g,NOK
+18,(*)*)*())()((,NOK
+19,()(()),OK<data_1></data_1<data_1><data_2></data_2</data_1
+20,(*)*)*),NOK
+20,(*)*)*),NOK
+21,)()(((rr)cq(a),NOK
+22,c**j)u*(**(**)),NOK
+22,c**j)u*(**(**)),NOK
+23,()))()(((i,NOK
+24,*))bs,NOK
+24,*))bs,NOK

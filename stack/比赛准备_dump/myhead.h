@@ -26,6 +26,5 @@ class Solution{
     int tag ;      // 标志
     int leftCount ; //左括号数量
     int rightCount ; //右号数量
-    int size; //错误位置
 };
 #endif
