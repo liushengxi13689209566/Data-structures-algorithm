@@ -6,5 +6,18 @@
  ************************************************************************/
 
 #include<iostream>
+#include"Map.h"
 using namespace std;
-
+int main(void)
+{
+    Map graph ;
+    graph.addVertexToVertexNode('A');
+    graph.addVertexToVertexNode('B');
+    graph.addVertexToVertexNode('C');
+    graph.addVertexToVertexNode('D');
+    graph.setArc('A','B',10);
+    graph.setArc('C','B',3);
+    graph.setArc('A','C',5);
+    graph.setArc('A','D',2);
+    graph.print();
+}

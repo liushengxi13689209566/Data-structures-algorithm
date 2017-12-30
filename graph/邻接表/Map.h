@@ -12,7 +12,6 @@
 class Edge ;
 class vertex{  //顶点
     public:
-    vertex(char ch = 0 );
 
     char vertexData ; //顶点数据
     bool visted ;  //顶点是否被访问
@@ -20,8 +19,6 @@ class vertex{  //顶点
 };
 class Edge{   //边
     public:
-    Edge();
-    private:
     int Nodeindex ; //下一条边所链接的顶点的下标
     int weight;     //权重
     Edge *next ;    //链表指针
@@ -32,7 +29,7 @@ class Map{    //图
     Map();
     ~Map();
     bool addVertexToVertexNode(char ch); // 加入点 
-    bool setArc(char Node,int index,int weight);//加入边
+    bool setArc(char start,char end,int weight);//加入边
     void print();
 
     private:

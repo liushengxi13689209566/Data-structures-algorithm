@@ -81,7 +81,7 @@ void Map::DFS(int NodeIndex)
           }
     }
 }
-void Map::RealBFS(vector<int> TempVec)
+void Map::RealBFS(vector<int> &TempVec)
 {
     vector<int> CurVec ;
     //cout << "TempVec.size == " << TempVec.size() <<  endl ;
