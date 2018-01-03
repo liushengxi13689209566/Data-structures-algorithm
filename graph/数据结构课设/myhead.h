@@ -29,7 +29,7 @@
 
 #define  MAXSIZE 52 
 #define  MAXMAX    99999
-#define  TT  unsigned 
+#define  TT  int  
 #define FilePath   
 
 class Graph ;

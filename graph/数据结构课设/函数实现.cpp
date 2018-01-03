@@ -59,54 +59,63 @@ int Graph::create()     //读入信息从而创建图
      printf("vexnum == %d \n",vexnum );
      printf("arcsnum == %d \n",arcsnum);
 
+    MYSQL_RES *res ;
+    MYSQL_ROW row ;
+
     mysql = mysql_init(NULL);   //打开数据库
     if(!mysql)   cout << "数据库初始化出错  " << endl ;
     mysql_connect(mysql) ;
-    
-    string query1 ;
-    string query2 ;
 
+    std::string query1  = "select  *   from  City " ;
+    std::string query2  = "select  *   from  Edge  " ;
 
-    // for(int i = 0 ;i < vexnum ;++i)    //读取各个城市信息 11
-    // {
-    //     fcin >> this->vex[i].CityName  >> this->vex[i].QueryUrl  ;//读入信息
-    //     this->vex[i].CityNumbers = i+1 ;
+    int t =  mysql_real_query(mysql ,query1,query1.size());
+    if(t != 0 )    cout << "server mysql_real_query" << endl ;
+    res = mysql_store_result(mysql) ;
+    if( !res )     cout << "server mysql_real_query" << endl ;
 
-    // cout << this->vex[i].CityNumbers << endl ;
-    // cout << this->vex[i].CityName << endl ;
-    // cout << this->vex[i].QueryUrl << endl ;
-    // }
+    int a = mysql_num_rows(res) ;
+    int index ,index_A ,index_B  ;
+    for(int i =  0 ;i< a ;++i)
+    {
+        row = mysql_fetch_row(res);
+        index = atoi(row[0]-1) ;
+        this->vex[index].CityNumbers  = atoi(row[0]);
+        this->vex[index].CityName =  row[1];
+        this->vex[index].QueryUrl  = row[2];
+    }
+    t =  mysql_real_query(mysql ,query2,query2.size());
+    if(t != 0 )    cout << "server mysql_real_query" << endl ;
+    res = mysql_store_result(mysql) ;
+    if( !res )     cout << "server mysql_real_query" << endl ;
+    a = mysql_num_rows(res) ;
+    for(int i = 0 ;i< a ;++i)
+    {
+        row = mysql_fetch_row(res);
+        index_A  =  atoi(row[1]) ;
+        index_B = atoi(row[2]);
+        this->arcs_distance[index_A][index_B] = atoi(row[3]);
+        this->arcs_distance[index_B][index_A] = atoi(row[3]);
 
-    // TT index_A ,index_B ,distance , minutes ;
-    // float money ;
+        this->arcs_fare[index_A][index_B] = atof(row[4]);
+        this->arcs_fare[index_B][index_A] = atof(row[4]);
 
-    // for(int  i = 0 ;i < arcsnum  ; ++i  )       //读取边的信息 15
-    // {
-    //     fcin >> index_A >> index_B  >> distance   ; 
-    //     this->arcs_distance[index_A][index_B] = distance ;
-    //     this->arcs_distance[index_B][index_A] = distance ;
-    //     fcin >> money ;
-    //     this->arcs_fare[index_A][index_B] = money ;
-    //     this->arcs_fare[index_B][index_A] = money ;
-    //     fcin >> minutes ;
-    //     this->arcs_time[index_A][index_B] = minutes ;
-    //     this->arcs_time[index_B][index_A] = minutes ;
-    // }
-    // // printf("arc_distance[%d][]\n");
-    // // for(int i= 0;i < vexnum ;++i)
-    // // {
-    // //     for(int j= 0 ;j< vexnum ;++j)
-    // //     {
-    // //         // if(arcs_distance[i][j] == MAXMAX )
-    // //         //     cout << "    " ;
-    // //         // else 
-    // //         printf("%7d",arcs_distance[i][j]);
-    // //             //cout << arcs_distance[i][j]    << "      " ;
-    // //     }
-    // //     cout << endl ;
-    // // }
-    // fcin.close();
-     close_connection(mysql);
+        this->arcs_time[index_A][index_B] = atoi(row[5]);
+        this->arcs_time[index_B][index_A] = atoi(row[5]);
+    }
+   
+    printf("arc_distance[%d][]\n");
+    for(int i= 0;i < vexnum ;++i)
+    {
+        for(int j= 0 ;j< vexnum ;++j)
+        {
+            
+            printf("%7d",arcs_distance[i][j]);
+
+        }
+        cout << endl ;
+    }
+    close_connection(mysql);
     return 0;
 }
 
@@ -152,7 +161,7 @@ int Graph::GraphUser()
         cin >> choice ;
         switch(choice)
         {
-            case 0:  /*GraphUserListInfo(); */ break ;
+            case 0:  GraphUserListInfo();  break ;
             case 1:  GraphUserQueryCity();   break ;
             case 2:  GraphUserQueryRoute() ;  break ;
             case 3:  break ;
@@ -161,12 +170,25 @@ int Graph::GraphUser()
     }while(choice != 3 );
     return 0;
 }
-/*int Graph::GraphUserListInfo() // 查 询 基 本 信 息
+int Graph::GraphUserListInfo()  // 查 询 基 本 信 息,GraphUser case 0 :
 {
-
-    
-}*/
-int Graph::GraphUserQueryCity()  //查 询 某 城 市 基 本 情 况
+    printf(GREEN"\n\n\n\n\n\n\t\t\t\t\t\t城 市 基 本 信 息  为 ：\n\n\n"END);
+    printf(YELLOW"\t\t\t\t\t\t\t 城市<------>城市 ： 距离   费用   耗费时间   \n\n"END);
+    for(int i= 0 ;i< vexnum ;++i)
+    {
+        for(int j= 0 ;j <  i  ;++j)
+        {
+            if(arcs_distance[i][j] != MAXMAX )
+            {
+                cout << vex[i].CityName   << "<------>"  vex[j].CityName 
+                << "  ： " << arcs_distance[i][j] <<  "  "
+                << arcs_fare[i][j]  << "  "
+                << arcs_time[i][j]  << endl  ;   
+            }
+        }
+    }
+} 
+int Graph::GraphUserQueryCity()  //查 询 某 城 市 基 本 情 况, GraphUser case 1 :
 {
     int choice ;
     do
@@ -180,13 +202,21 @@ int Graph::GraphUserQueryCity()  //查 询 某 城 市 基 本 情 况
         cin >> choice ;
         switch(choice)
         {
-            case 0:  /*GraphUserListCityTraffic();  */   break ;
+            case 0:  GraphUserListCityTraffic();     break ;
             case 1:  /*GraphUserQueryCityInformation(); */  break ;
             case 2:   break ;
             default :printf(RED"\n\n\t\t\t\t\t\t\t输入有错～～～,请检查后重新输入!!!\n"END); sleep(1) ;  break ;
         }
     }while(choice != 2);
 }
+
+
+int Graph::GraphUserListCityTraffic()//某城市交通情况查询,GraphUser:::GraphUserQueryCity case 0 :
+{
+
+}
+
+
 int Graph::GraphUserQueryRoute()  //查 询 两 地 之 间 的 线 路  
 {
     string start ,end ;
