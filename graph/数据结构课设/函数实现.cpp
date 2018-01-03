@@ -16,6 +16,7 @@ private:
     Node vex[MAXSIZE] ;  //地点集合
     TT vexnum = 0 ;
     TT arcsnum = 0 ;
+    MYSQL *mysql ;
 */
 /*****************************************构造与析构******************************************/
 Graph::Graph()
@@ -36,45 +37,77 @@ Graph::Graph()
 Graph::~Graph()
 {
 }
+/*************************************数据库操作函数**************************************/
+void Graph::mysql_connect(MYSQL *mysql)
+{  
+    if(  !(mysql=mysql_real_connect(mysql, HOST, USER, PASSWD, DB_NAME, 0, NULL, 0) ) ) {  
+             cout << "数 据 库 连 接 出 错   " << endl  ;
+    mysql_query(mysql,"set names gbk");     //防止乱码。设置和数据库的编码一致就不会乱码
+    }  
+}  
+void Graph::close_connection(MYSQL *mysql)
+{
+    mysql_close(mysql);
+}
+
 
 /*************************************关于图的一些函数**************************************/
-int Graph::create()     //从文件读入信息从而创建图
+int Graph::create()     //读入信息从而创建图
 {
-    ifstream fcin ;
-    string buffer ;
-    fcin.open("input.txt");
-    fcin >> buffer ; //读入 vernum 
-    this->vexnum = stringToNum<TT>(buffer);
-    fcin >> buffer ;  //读入 arcnum 
-    this->arcsnum = stringToNum<TT>(buffer);
-    printf("vexnum == %d \n",vexnum );
-    printf("arcsnum == %d \n",arcsnum);
-    int index ;
-    for(int i = 0 ;i < vexnum ;++i) //读取各个城市信息
-    {
-        fcin >> buffer ; //读入信息
-        //cout << buffer << endl ;
-        this->vex[i].CityNumbers = i+1 ;
+    ifstream fcin("input.txt",ios::in) ;
+    fcin >>  vexnum  >> arcsnum ;
+     printf("vexnum == %d \n",vexnum );
+     printf("arcsnum == %d \n",arcsnum);
 
-        for(int j= 0 ;j < buffer.size() ; ++j){
-            //cout << buffer[j]  << " " ;
-            if(buffer[j] == '-' ){
-                index =  j    ; 
-                break ;
-            }
-        }
-        this->vex[i].CityName = buffer.substr(0,index) ;
-        this->vex[i].QueryUrl = buffer.substr(index+1,buffer.size()) ;
-    cout << this->vex[i].CityNumbers << endl ;
-    cout << this->vex[i].CityName << endl ;
-    cout << this->vex[i].QueryUrl << endl ;
-    }
-    for(int  i = 0 ;i < arcsnum ;++i  ) //读取边的信息
-    {
-        
+    mysql = mysql_init(NULL);   //打开数据库
+    if(!mysql)   cout << "数据库初始化出错  " << endl ;
+    mysql_connect(mysql) ;
+    
+    string query1 ;
+    string query2 ;
 
-    }
-    fcin.close();
+
+    // for(int i = 0 ;i < vexnum ;++i)    //读取各个城市信息 11
+    // {
+    //     fcin >> this->vex[i].CityName  >> this->vex[i].QueryUrl  ;//读入信息
+    //     this->vex[i].CityNumbers = i+1 ;
+
+    // cout << this->vex[i].CityNumbers << endl ;
+    // cout << this->vex[i].CityName << endl ;
+    // cout << this->vex[i].QueryUrl << endl ;
+    // }
+
+    // TT index_A ,index_B ,distance , minutes ;
+    // float money ;
+
+    // for(int  i = 0 ;i < arcsnum  ; ++i  )       //读取边的信息 15
+    // {
+    //     fcin >> index_A >> index_B  >> distance   ; 
+    //     this->arcs_distance[index_A][index_B] = distance ;
+    //     this->arcs_distance[index_B][index_A] = distance ;
+    //     fcin >> money ;
+    //     this->arcs_fare[index_A][index_B] = money ;
+    //     this->arcs_fare[index_B][index_A] = money ;
+    //     fcin >> minutes ;
+    //     this->arcs_time[index_A][index_B] = minutes ;
+    //     this->arcs_time[index_B][index_A] = minutes ;
+    // }
+    // // printf("arc_distance[%d][]\n");
+    // // for(int i= 0;i < vexnum ;++i)
+    // // {
+    // //     for(int j= 0 ;j< vexnum ;++j)
+    // //     {
+    // //         // if(arcs_distance[i][j] == MAXMAX )
+    // //         //     cout << "    " ;
+    // //         // else 
+    // //         printf("%7d",arcs_distance[i][j]);
+    // //             //cout << arcs_distance[i][j]    << "      " ;
+    // //     }
+    // //     cout << endl ;
+    // // }
+    // fcin.close();
+     close_connection(mysql);
+    return 0;
 }
 
 

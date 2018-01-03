@@ -10,8 +10,10 @@
 #include<vector>
 #include<unistd.h>
 #include<stdlib.h>
-#include <sstream>    //使用stringstream需要引入这个头文件  
+#include<mysql/mysql.h>
+#include<sstream>    //使用stringstream需要引入这个头文件  
 #include<fstream>  // 为了使用文件IO 
+#include<iostream>
 
 #define END          "\e[0m"
 #define RED           "\e[1;31m"
@@ -19,6 +21,11 @@
 #define YELLOW      "\e[1;33m"
 #define BLUE         "\e[1;34m"
 #define PURPLE     "\e[1;35m"
+
+#define HOST    "localhost"
+#define USER    "root"
+#define DB_NAME  "Graph"      // 以 root  的身份登录
+#define	PASSWD    "thq520&iwwfyf"
 
 #define  MAXSIZE 52 
 #define  MAXMAX    99999
@@ -39,7 +46,7 @@ class Node{
 
 };
 class Graph{
-    public:
+public:
  /*********************************构造与析构*****************************/
     Graph()  ;
     //Graph() ;
@@ -68,13 +75,19 @@ class Graph{
 
 
 /*****************************************私有成员****************************************/
-    private:
+private:
     TT  arcs_distance[MAXSIZE][MAXSIZE] = { 0 } ; //代表有弧相连和权值（即公里数，票价，时间等。。。）
     float arcs_fare[MAXSIZE][MAXSIZE] =  { 0.0 };   //如果用户选择了其中某一个进行查询（设置标志位）
     TT arcs_time[MAXSIZE][MAXSIZE] = { 0 } ; //数据是必然要存储的
     Node vex[MAXSIZE] ;  //地点集合
     TT vexnum = 0 ;
     TT arcsnum = 0 ;
+    MYSQL *mysql ; //MYSQL 句柄
+/*****************************************私有成员函数****************************************/
+
+    void mysql_connect(MYSQL *mysql) ;
+    void close_connection(MYSQL *mysql) ;
+
 };
 /*****************************************模板函数****************************************/
 //模板函数：将string类型变量转换为常用的数值类型（此方法具有普遍适用性）  
