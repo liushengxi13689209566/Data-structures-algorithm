@@ -301,7 +301,7 @@ int Graph::GraphUserQueryRoute() //查 询 两 地 之 间 的 线 路
     int index_A,index_B ;
     index_A = getCityIndex(start);
     index_B = getCityIndex(end);
-
+    cout <<"0.**********************************************k   ==   "   <<  k   <<    endl  ;
     int choice ;
     do
     {
@@ -334,10 +334,15 @@ int Graph::GraphUserQueryRoute() //查 询 两 地 之 间 的 线 路
 int Graph::printRouteByCount(int index_A ,int index_B)  //集中精力处理SmallPath 
 {
     int count  =  0 ;
+    k = 0 ;
     cout << " #########################################" << endl ;
-    ddffss(index_A,index_B,1);
+    cout <<"1.**********************************************k   ==   "   <<  k   <<    endl  ;
 
-    cout <<"k   ==   "   <<  k   <<    endl  ;
+
+    ddffss(index_A,index_B,1) ;
+
+    cout <<"2.**********************************************k   ==   "   <<  k   <<    endl  ;
+
 
     for(int i= 0;i< k  ;++i)
     {
@@ -396,58 +401,10 @@ int Graph::printRouteByCount(int index_A ,int index_B)  //集中精力处理Smal
             cout <<  vex[SmallPath[index][i]].CityName << "---> "  ;
     }
     cout << endl ;
-//     struct X{
-//         int num;
-//         vector<int>  path;
-//     };
-    
-//     X temp;
-//     //队列Q
-//     queue<X> Q; 
-//     // book 用来标记是否被访问过  初始化为0
-//     int  book[vexnum+1] = {0};
-
-//     //城市起点 终点
-//     int flag=0 ,sum = 1 ;
-    
-//     temp.num = index_A ;
-//     temp.path.push_back(index_A);
-//     Q.push(temp);
-    
-//     vector<int> res ;
-//     while (!Q.empty()){
-//         //队头出一个
-        
-//         X del = Q.front(); //将出队的保存起来 
-//         Q.pop();
-//         book[del.num] = 1;
-//         if (del.num == index_B )
-//         {
-//             res = del.path;
-//             break;
-//         }
-//         for( int j = 0 ; j<  vexnum ;j++ ){
-//             //将于出队的临接的点进入队列之中
-//             if(arcs_distance[del.num][j] != MAXMAX  && book[j] ==0 ){          
-//                 X  temp;
-//                 temp.num = j;
-//              //   cout << j  << " " << del.path.size() << endl; 
-//                 temp.path = del.path;
-//                 temp.path.push_back(j);
-//                 //cout <<"TEMP 大小为" <<  temp.path.size() <<endl;
-//                 //存入其中
-//                 Q.push(temp);       
-//             }
-//         }
-//         sum++;
-//     }
-//     cout << "路将为" <<endl;
-//     for(auto &h: res){
-//         cout << h << " " <<endl;
-//     }
-// }
+    exit(0);
 
 }
+
 
 void Graph::ddffss(int index_A, int index_B, int depth)
 {
@@ -456,12 +413,12 @@ void Graph::ddffss(int index_A, int index_B, int depth)
 
     if ( index_A == index_B) 
     {
+        k++ ;
         for (int i = 1 ; i <= depth; i++)
         {
             SmallPath[k][i] = nodes[i] ;  
             cout <<   vex[nodes[i]].CityName  <<  "---->> "   ;
         }
-        k++ ;
         cout  <<  endl;
         return ;
     }
@@ -486,6 +443,7 @@ void Graph::ddffss(int index_A, int index_B, int depth)
 
 int Graph::printRoute(int index_A ,int index_B ) //查 询 两 地 之 间 的 所 有 路 线
 {
+    k = 0 ;
     ddffss(index_A,index_B ) ;
 }
 

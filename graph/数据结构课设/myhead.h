@@ -91,7 +91,7 @@ private:
     TT arcsnum = 0 ;
     MYSQL *mysql ; //MYSQL 句柄
     int  SmallPath[MAXMAX][MAXMAX] ={0};   //解决中转次数最少的问题
-    int k ;
+    int k = 0 ;
     int nodes[1000] ; 
 /*****************************************私有成员函数****************************************/
 
@@ -100,7 +100,8 @@ private:
     int  GraphUserListCityTraffic();
     int  GraphUserQueryCityInformation() ;
     int  getCityIndex(std::string  ) ;
-    void  ddffss(int index_A, int index_B, int depth = 1  ) ;
+    void  dfs(int index_A, int index_B, int depth =  1);
+    void  ddffss(int index_A, int index_B, int depth = 1 ) ;
     int  printRoute(int index_A ,int index_B ) ;
     int  printRouteByCount(int ,int )  ;
 
