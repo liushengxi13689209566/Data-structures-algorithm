@@ -17,20 +17,18 @@ using namespace std ;
 
 int main(void)
 {
+   string name ;
+    printf("\n\n\n\n\n\n\n\n\t\t\t\t\t\t\t    请 输 入 城 市 名 称  ：   \n\n");
+    cin >> name  ;       // 需要检查是否输入正确哦，后面再处理 ～～
     pid_t  pid_love ;
     int status_love ;
-    pid_love=fork();
-             switch(pid_love)
-             {
-                 case -1:   printf("fork pid_love  ERROR !!!\n") ;return 0;
-                 case 0 :   /*execvp("/opt/google/chrome/google-chrome",arg );*/
-                 system("/opt/google/chrome/google-chrome  https://github.com/ ");
-                 sleep(8) ; exit(0);
-                 default:if(waitpid(pid_love ,&status_love,0)< 0)
-                        {
-                            printf("waitpid is  ERROR !!!\n");
-                            return  0;
-                        }
-                        break;
-             }
+    pid_love = fork();  //第一次fork 进程
+    name = "/opt/google/chrome/google-chrome   " + name  ;
+    switch(pid_love)
+    {
+        case -1:   printf("fork pid_love  ERROR !!!\n") ;return 0;
+        case 0 :  
+        system(name.c_str());
+        default:  break;
+    }
 }

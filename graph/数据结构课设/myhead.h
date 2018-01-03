@@ -14,6 +14,7 @@
 #include<sstream>    //使用stringstream需要引入这个头文件  
 #include<fstream>  // 为了使用文件IO 
 #include<iostream>
+#include<queue>
 
 #define END          "\e[0m"
 #define RED           "\e[1;31m"
@@ -28,23 +29,29 @@
 #define	PASSWD    "thq520&iwwfyf"
 
 #define  MAXSIZE 52 
-#define  MAXMAX    99999
+#define  MAXMAX    999
 #define  TT  int  
 #define FilePath   
+
 
 class Graph ;
 class Node{
     public:
     Node() = default ;
-   // ~Node() ;
+    //~Node() ;
     private:
     TT CityNumbers = 0; //城市编号
     std::string CityName ; //名称
     std::string QueryUrl ; //信息查询网址
+    bool visted  = false ;  // 为了遍历的时候，判断是否能够访问 
 
     friend Graph ;
 
 };
+
+
+
+
 class Graph{
 public:
  /*********************************构造与析构*****************************/
@@ -83,10 +90,23 @@ private:
     TT vexnum = 0 ;
     TT arcsnum = 0 ;
     MYSQL *mysql ; //MYSQL 句柄
+    int  SmallPath[MAXMAX][MAXMAX] ={0};   //解决中转次数最少的问题
+    int k ;
+    int nodes[1000] ; 
 /*****************************************私有成员函数****************************************/
 
     void mysql_connect(MYSQL *mysql) ;
     void close_connection(MYSQL *mysql) ;
+    int  GraphUserListCityTraffic();
+    int  GraphUserQueryCityInformation() ;
+    int  getCityIndex(std::string  ) ;
+    void  ddffss(int index_A, int index_B, int depth = 1  ) ;
+    int  printRoute(int index_A ,int index_B ) ;
+    int  printRouteByCount(int ,int )  ;
+
+
+  
+
 
 };
 /*****************************************模板函数****************************************/

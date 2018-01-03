@@ -12,7 +12,6 @@ int main(void)
 {
     Graph  gg ;
 	gg.create();
-    //gg.GraphMenu() ;
-
+    gg.GraphMenu() ;
     return 0;
 }

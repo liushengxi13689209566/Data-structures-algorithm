@@ -60,27 +60,93 @@ void Map::printMartrix()
         cout << endl ;
     }
 }
+
 void Map::printNode()
 {
     for(int i=0;i != AlreadyInCount ;++i)
         cout << pNodeArray[i].m_cData   << "  "  << pNodeArray[i].visted   << endl ;
     cout << endl ;
 }
-void Map::DFS(int NodeIndex)
+
+//static int nodes[1000][1000] ;
+/*void Map::init()
 {
-    cout << pNodeArray[NodeIndex].m_cData   << " ";
-    pNodeArray[NodeIndex].visted =true ;
-    for(int i=0;i != AlreadyInCount ;++i)
+    for(int i = 0 ;i < 1000 ;i++)
+    {
+        for(int j = 0 ;j< 1000 ;j++)
+            nodes[i][j] = -10 ;
+    }
+}*/
+void Map::ddffss(int ima, int edo, int depth)
+{
+
+
+    static int nodes[1000]  ;
+    nodes[depth] =  ima ;
+    pNodeArray[ima].visted = true ;
+
+    if (ima == edo )
+    {
+        for (int i = 1; i <= depth; i++)
+        {
+            cout << nodes[i] ;
+
+
+        }
+        cout << endl;
+        return;
+    }
+
+    for (int i = 0; i < AlreadyInCount; i++)
+    {
+        if (pMartrix[MaxVertexCount * ima + i] != 0) 
+        {
+            if (pNodeArray[i].visted == false)
+            {
+                pNodeArray[i].visted = true;
+                ddffss(i, edo, depth + 1);
+                pNodeArray[i].visted = false;
+            }
+        }
+    }
+}
+/*void Map::print()
+{
+    for(int i = 0 ;i < 1000 ;i++)
+    {
+        for(int j = 0 ;j< 1000 ;j++)
+            printf("nodes[%d][%d] == %d ",nodes[i][j]);
+        cout << endl ;
+    }
+}*/
+/*void Map::DFS(int NodeIndex,int index_B)
+{
+    cout << pNodeArray[NodeIndex].m_cData   << " " ;
+    // VecString.push_back( pNodeArray[NodeIndex].m_cData  )  ;
+
+    if(NodeIndex == index_B )  
+    {
+        // for(auto i: VecString )
+        //     cout << i << "  "  ;
+         cout << endl ;
+        // VecString.pop_back() ;
+        return  ;
+    }
+
+    pNodeArray[NodeIndex].visted = true ;
+
+    for(int i = 0;i != AlreadyInCount ;++i)
     {
         //if(pMartrix[i] ==  1 && pNodeArray[i].visted ==  false )
           //  DFS_next(i);
           if(pMartrix[MaxVertexCount*NodeIndex+i] != 0)
           {
               if(pNodeArray[i].visted == false )
-                  DFS(i);
+                  DFS(i,index_B ) ;
           }
     }
-}
+}*/
+
 void Map::RealBFS(vector<int> &TempVec)
 {
     vector<int> CurVec ;

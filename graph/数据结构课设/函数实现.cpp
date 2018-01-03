@@ -32,6 +32,15 @@ Graph::Graph()
     }
     vexnum = 0 ;
     arcsnum = 0 ;
+    for(int i= 0;i< MAXMAX ;++i)
+    {
+        for(int j = 0 ;j < MAXMAX ;++j)
+            SmallPath[i][j]= MAXMAX ;
+    }
+    k = 0 ;
+    for(int i= 0 ;i< 1000 ;i++)
+        nodes[i] = MAXMAX ;
+
 }
 
 Graph::~Graph()
@@ -55,9 +64,11 @@ void Graph::close_connection(MYSQL *mysql)
 int Graph::create()     //读入信息从而创建图
 {
     ifstream fcin("input.txt",ios::in) ;
+     int index ,index_A ,index_B  ;
     fcin >>  vexnum  >> arcsnum ;
      printf("vexnum == %d \n",vexnum );
      printf("arcsnum == %d \n",arcsnum);
+    fcin.close() ;
 
     MYSQL_RES *res ;
     MYSQL_ROW row ;
@@ -66,29 +77,35 @@ int Graph::create()     //读入信息从而创建图
     if(!mysql)   cout << "数据库初始化出错  " << endl ;
     mysql_connect(mysql) ;
 
-    std::string query1  = "select  *   from  City " ;
-    std::string query2  = "select  *   from  Edge  " ;
-
-    int t =  mysql_real_query(mysql ,query1,query1.size());
+    string query1  = "select  *   from  City " ;
+    int t =  mysql_real_query(mysql ,query1.c_str(),query1.size());
     if(t != 0 )    cout << "server mysql_real_query" << endl ;
     res = mysql_store_result(mysql) ;
     if( !res )     cout << "server mysql_real_query" << endl ;
 
     int a = mysql_num_rows(res) ;
-    int index ,index_A ,index_B  ;
-    for(int i =  0 ;i< a ;++i)
+    printf("a== %d \n",a);
+
+    for(int i =  0 ;i < a ;++i)
     {
         row = mysql_fetch_row(res);
-        index = atoi(row[0]-1) ;
+        cout << "--------" << row[0] << endl ;
+        index = atoi(row[0]) - 1 ;
+        cout << "index == " << index << endl ;
         this->vex[index].CityNumbers  = atoi(row[0]);
         this->vex[index].CityName =  row[1];
         this->vex[index].QueryUrl  = row[2];
+
+        cout << vex[i].CityNumbers << " "<< vex[i].CityName << "  "<< vex[i].QueryUrl << endl ;
     }
-    t =  mysql_real_query(mysql ,query2,query2.size());
+    
+    string query2  = "select  *   from  Edge  " ;
+    t =  mysql_real_query(mysql ,query2.c_str(),query2.size());
     if(t != 0 )    cout << "server mysql_real_query" << endl ;
     res = mysql_store_result(mysql) ;
     if( !res )     cout << "server mysql_real_query" << endl ;
     a = mysql_num_rows(res) ;
+     printf("a== %d \n",a);
     for(int i = 0 ;i< a ;++i)
     {
         row = mysql_fetch_row(res);
@@ -115,7 +132,13 @@ int Graph::create()     //读入信息从而创建图
         }
         cout << endl ;
     }
+    for(int i= 0;i < vexnum ;++i)
+    {
+        cout << vex[i].CityNumbers << vex[i].CityName << vex[i].QueryUrl << endl ;
+    }
+
     close_connection(mysql);
+
     return 0;
 }
 
@@ -176,11 +199,11 @@ int Graph::GraphUserListInfo()  // 查 询 基 本 信 息,GraphUser case 0 :
     printf(YELLOW"\t\t\t\t\t\t\t 城市<------>城市 ： 距离   费用   耗费时间   \n\n"END);
     for(int i= 0 ;i< vexnum ;++i)
     {
-        for(int j= 0 ;j <  i  ;++j)
+        for(int j = 0 ;j <  i  ;++j)  //无向图，查一半
         {
             if(arcs_distance[i][j] != MAXMAX )
             {
-                cout << vex[i].CityName   << "<------>"  vex[j].CityName 
+                cout << vex[i].CityName   << "<------>" <<  vex[j].CityName 
                 << "  ： " << arcs_distance[i][j] <<  "  "
                 << arcs_fare[i][j]  << "  "
                 << arcs_time[i][j]  << endl  ;   
@@ -202,53 +225,268 @@ int Graph::GraphUserQueryCity()  //查 询 某 城 市 基 本 情 况, GraphUse
         cin >> choice ;
         switch(choice)
         {
-            case 0:  GraphUserListCityTraffic();     break ;
-            case 1:  /*GraphUserQueryCityInformation(); */  break ;
+            case 0:   GraphUserListCityTraffic();     break ;
+            case 1:   GraphUserQueryCityInformation();  break ;
             case 2:   break ;
             default :printf(RED"\n\n\t\t\t\t\t\t\t输入有错～～～,请检查后重新输入!!!\n"END); sleep(1) ;  break ;
         }
     }while(choice != 2);
 }
 
-
-int Graph::GraphUserListCityTraffic()//某城市交通情况查询,GraphUser:::GraphUserQueryCity case 0 :
+int  Graph::getCityIndex(string name) // 得到某一个城市的下标
 {
-
+    for(int i= 0 ;i< vexnum ; ++i)
+    {
+        if(vex[i].CityName  == name) 
+        return i ;
+    }
 }
 
 
-int Graph::GraphUserQueryRoute()  //查 询 两 地 之 间 的 线 路  
+int Graph::GraphUserListCityTraffic()//某城市交通情况查询,GraphUser:::GraphUserQueryCity case 0 :
+{
+    string name ;
+    printf(YELLOW"\n\n\n\n\n\n\n\n\t\t\t\t\t\t\t    请 输 入 城 市 名 称  ：   \n\n"END);
+    cin >> name  ;
+    int  index = getCityIndex(name) ;
+
+    printf(GREEN"\n\n\n\n\n\n\t\t\t\t\t\t城 市 交 通 情 况 为 ：\n\n\n"END);
+    printf(YELLOW"\t\t\t\t\t\t\t 城市<------>城市 ： 距离   费用   耗费时间   \n\n"END);
+
+    for(int i= 0 ;i< vexnum ;++i)
+    {
+        if(i == index )
+        {
+            for(int j=0 ;j< vexnum ;++j)
+            {
+                if(arcs_distance[i][j] != MAXMAX )
+                {
+                    cout << vex[index].CityName   << "<------>"  << vex[j].CityName 
+                    << "  ： " << arcs_distance[i][j] <<  "  "   //有疑问，感觉应该是arcs[index][j];
+                    << arcs_fare[i][j]  << "  "
+                    << arcs_time[i][j]  << endl  ;   
+                }
+            }
+        }
+    }
+    return 0 ;
+}
+
+int Graph::GraphUserQueryCityInformation()  //某城 市 信 息 查 询,GraphUser:::GraphUserQueryCity case 1 :
+{
+    string name ;
+    printf(YELLOW"\n\n\n\n\n\n\n\n\t\t\t\t\t\t\t    请 输 入 城 市 名 称  ：   \n\n"END);
+    cin >> name  ;       // 需要检查是否输入正确哦，后面再处理 ～～
+    int  index = getCityIndex(name) ;
+    pid_t  pid_love ;
+    int status_love ;
+    pid_love = fork();  //第一次fork 进程
+    name = "/opt/google/chrome/google-chrome   " + vex[index].QueryUrl   ;   //google-chrome www.baidu.com 
+    switch(pid_love)
+    {
+        case -1:   printf("fork pid_love  ERROR !!!\n") ;return 0;
+        case 0 :   system(name.c_str());
+        default:  break ;   //父进程再不管子进程了
+    }
+}
+
+int Graph::GraphUserQueryRoute() //查 询 两 地 之 间 的 线 路  
 {
     string start ,end ;
     printf(YELLOW"\n\n\n\n\n\n\n\n\t\t\t\t\t\t\t    请 输 入 起 点 ：   \n\n"END);
     cin >> start ;
     printf(BLUE  "\t\t\t\t\t\t\t    请 输 入 终 点 ：   \n\n"END); 
     cin >> end ;
-    //printRoute();   // /dfs/bfs 查询  
-    //sleep(8)
+
+    int index_A,index_B ;
+    index_A = getCityIndex(start);
+    index_B = getCityIndex(end);
+
     int choice ;
     do
     {
         //printf("\033c");
-
-        printf(YELLOW"\n\n\n\n\n\n\n\n\t\t\t\t\t\t\t    0.按 中 转 次 数 排 序   \n\n"END);
-        printf(BLUE  "\t\t\t\t\t\t\t    1.按 距 离 排 序  \n\n"END);  
-        printf(RED   "\t\t\t\t\t\t\t    2.按  money  排   序\n\n" END);
-        printf(BLUE  "\t\t\t\t\t\t\t    3.按 时 间 排 序  \n\n"END); 
-        printf(RED   "\t\t\t\t\t\t\t    4.      取   消\n\n" END);
-        printf(      "\t\t\t\t\t\t\t    请输入你的选择：");
+        printf(YELLOW"\n\n\n\n\n\n\n\n\t\t\t\t\t\t\t    0.中 转 次 数 最 少   \n\n"END); //一旦要选择排序就意味着
+                                                                                        //必须要进行存储
+        printf(BLUE  "\t\t\t\t\t\t\t    1.距 离 最 优  \n\n"END);  
+        printf(RED   "\t\t\t\t\t\t\t    2.money  最 少 \n\n" END);
+        printf(BLUE  "\t\t\t\t\t\t\t    3.时 间 最  短   \n\n"END); 
+        printf(BLUE  "\t\t\t\t\t\t\t    4.查 看 所 有 路 线  \n\n"END);  
+        printf(RED   "\t\t\t\t\t\t\t    5.      取   消\n\n" END);
+        printf(      "\t\t\t\t\t\t\t    请输入你的选择 ：" );
         cin >> choice ;
         switch(choice)
         {
-            case 0:  /*printRouteByCount();*/     break ;
+            case 0:  printRouteByCount(index_A,index_B);     break ;
             case 1:  /*printRouteBydistance();  */ break ;
             case 2:  /*printRouteByMoney() ;*/break ;
             case 3:  /*printRouteByTime() ;  */break;
-            case 4:  break;
+            case 4:  printRoute(index_A,index_B);  break;
+            case 5: break ;
             default :printf(RED"\n\n\t\t\t\t\t\t\t输入有错～～～,请检查后重新输入!!!\n"END); sleep(1) ;  break ;
         }
-    }while(choice != 4);
+    }while(choice != 5) ;
     return 0;
+}
+
+
+
+int Graph::printRouteByCount(int index_A ,int index_B)  //集中精力处理SmallPath 
+{
+    int count  =  0 ;
+    cout << " #########################################" << endl ;
+    ddffss(index_A,index_B,1);
+
+    cout <<"k   ==   "   <<  k   <<    endl  ;
+
+    for(int i= 0;i< k  ;++i)
+    {
+        for(int j = 0 ;j < k ;++j)
+            cout << SmallPath[i][j]  <<  " " ;
+            cout << endl ;
+    }
+
+    cout << " @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@" << endl ;
+    for(int i= 0;i< MAXMAX ;++i)
+    {
+        count  = 0  ;
+        for(int j = 1 ; j < MAXMAX ;++j)
+        {
+            if(SmallPath[i][j] != MAXMAX  )
+                count++ ;
+        }
+        SmallPath[i][0] = count ;
+    }
+    
+
+    for(int i= 0;i< 20 ;++i)
+    {
+        for(int j = 0 ;j < 20 ;++j)
+            cout << SmallPath[i][j]  <<  " " ;
+            cout << endl ;
+    }
+    cout << " &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&  " << endl ;
+
+
+    int min = SmallPath[0][0] ,index = 0  ;
+    cout << "min == " << min << endl ;  // 3
+    cout << "index  == " << index  << endl ;  // 3
+    for(int i = 0 ;i < MAXMAX ;++i)
+    {   
+        if(SmallPath[i][0] < min )
+        {
+            min = SmallPath[i][0];
+            index =  i ;
+            cout << "min == " << min << endl ;  // 3
+            cout << "index  == " << index  << endl ;  // 3
+        }
+    }
+    cout << "min == " << min << endl ;  // 3
+    cout << "index  == " << index  << endl ;  // 3
+    for(int i= 0;i< 20 ;++i)
+    {
+        for(int j = 0 ;j < 20 ;++j)
+            cout << SmallPath[i][j]  <<  " " ;
+            cout << endl ;
+    }
+    cout << " %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% " << endl ;
+    for(int i = 0 ;i< MAXMAX ;++i)
+    {
+        if(SmallPath[index][i] != MAXMAX )
+            cout <<  vex[SmallPath[index][i]].CityName << "---> "  ;
+    }
+    cout << endl ;
+//     struct X{
+//         int num;
+//         vector<int>  path;
+//     };
+    
+//     X temp;
+//     //队列Q
+//     queue<X> Q; 
+//     // book 用来标记是否被访问过  初始化为0
+//     int  book[vexnum+1] = {0};
+
+//     //城市起点 终点
+//     int flag=0 ,sum = 1 ;
+    
+//     temp.num = index_A ;
+//     temp.path.push_back(index_A);
+//     Q.push(temp);
+    
+//     vector<int> res ;
+//     while (!Q.empty()){
+//         //队头出一个
+        
+//         X del = Q.front(); //将出队的保存起来 
+//         Q.pop();
+//         book[del.num] = 1;
+//         if (del.num == index_B )
+//         {
+//             res = del.path;
+//             break;
+//         }
+//         for( int j = 0 ; j<  vexnum ;j++ ){
+//             //将于出队的临接的点进入队列之中
+//             if(arcs_distance[del.num][j] != MAXMAX  && book[j] ==0 ){          
+//                 X  temp;
+//                 temp.num = j;
+//              //   cout << j  << " " << del.path.size() << endl; 
+//                 temp.path = del.path;
+//                 temp.path.push_back(j);
+//                 //cout <<"TEMP 大小为" <<  temp.path.size() <<endl;
+//                 //存入其中
+//                 Q.push(temp);       
+//             }
+//         }
+//         sum++;
+//     }
+//     cout << "路将为" <<endl;
+//     for(auto &h: res){
+//         cout << h << " " <<endl;
+//     }
+// }
+
+}
+
+void Graph::ddffss(int index_A, int index_B, int depth)
+{
+    nodes[depth] = index_A  ;
+    vex[index_A].visted = true ;
+
+    if ( index_A == index_B) 
+    {
+        for (int i = 1 ; i <= depth; i++)
+        {
+            SmallPath[k][i] = nodes[i] ;  
+            cout <<   vex[nodes[i]].CityName  <<  "---->> "   ;
+        }
+        k++ ;
+        cout  <<  endl;
+        return ;
+    }
+    // for (int i = 0; i < vexnum  ; i++)
+    // {
+    //     cout << arcs_distance[index_A][i] << "   " ;
+    // }
+    // cout <<  endl   ;
+    for (int i = 0; i < vexnum  ; i++)
+    {
+        if (arcs_distance[index_A][i] != MAXMAX ) 
+        {
+            if (vex[i].visted == false)
+            {
+                vex[i].visted  =  true ;
+                ddffss(i, index_B, depth + 1) ;
+                vex[i].visted  =  false ;
+            }
+        }
+    }
+}
+
+int Graph::printRoute(int index_A ,int index_B ) //查 询 两 地 之 间 的 所 有 路 线
+{
+    ddffss(index_A,index_B ) ;
 }
 
 /*****************************************管理员****************************************/
