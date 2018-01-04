@@ -105,6 +105,8 @@ private:
     int  printRoute(int index_A ,int index_B ) ;
     int  printRouteByCount(int ,int )  ;
     int  deleteACity() ;
+    int  undoRoad();
+    int  AddCity() ;  //增 加 一 个  地 点
 
 
   

@@ -348,6 +348,16 @@ int Graph::printRouteByCount(int index_A ,int index_B)  //集中精力处理Smal
     cout << endl  ; 
 }
 
+
+
+// int Graph::printRouteBydistance() //Dijkstra 算法
+// {
+
+
+// }
+
+
+
 void Graph::ddffss(int index_A, int index_B, int depth)
 {
     nodes[depth] = index_A  ;
@@ -417,8 +427,8 @@ int Graph::GraphRoot()
         switch(choice)
         {
             case 0:  deleteACity() ;  break ;
-            case 1:  /*undoRoad();  */ break ;
-            case 2:  /*AddCity() ;*/break ;
+            case 1:  undoRoad();  break ;
+            case 2:  AddCity() ;break ;
             case 3:  /*AddRoad() ;  */break;
             case 4:  /*SetNet();*/  break;
             case 5: break ;
@@ -450,42 +460,96 @@ int  Graph::deleteACity()  //删 除 一 个 地 点  success
 
     
 }
-int Graph::undoRoad()  //撤 销  路 线 
+int Graph::undoRoad()  // 撤 销  路 线  success 
 {
     string  start ,end ;
     printf(YELLOW"\n\n\n\n\n\n\n\n\t\t\t\t\t\t\t    请 输 入 起 点 ：   \n\n"END);
     cin >> start ;
     printf(BLUE  "\t\t\t\t\t\t\t    请 输 入 终 点 ：   \n\n"END); 
-    cin >> end ;
+    cin >> end  ;
 
-    int index_A，index_B  ;   
+    int index_A,index_B  ;   
     index_A = getCityIndex(start) ; 
-    index_B = getCityIndex(end);
+    index_B = getCityIndex(end) ;
    
     string temp_A = to_string(index_A);
     string temp_B = to_string(index_B) ;
 
-    string query2= "delete from Edge  where  index_A =   " + temp + "  or  index_B =  " + temp  ;
+    string query2 = "delete from Edge  where  index_A = " + temp_A + "  and  index_B = " + temp_B   ;
+        // cout <<" query2 ==  " << query2 << endl ;
 
     int t =  mysql_real_query(mysql ,query2.c_str(),query2.size());
     if(t != 0 )    cout << "server mysql_real_query" << endl ;
     
-    string query1 = "delete from City  where CityName =  '"+ name + "'" ;
+    string query1 = "delete from Edge   where index_A =   " + temp_B + "  and  index_B   =  " + temp_A   ;
+    // cout <<" query1 ==  " << query1 << endl ;
     t =  mysql_real_query(mysql ,query1.c_str(),query1.size());
     if(t != 0 )    cout << "server mysql_real_query" << endl ;
 }
 
+int Graph::AddCity()  //增 加 一 个  地 点 success
+{
+    string name ;
+    printf(YELLOW"\n\n\n\n\n\n\n\n\t\t\t\t\t\t\t    请 输 入 地 点 名 称 ：   \n\n"END);
+    cin >> name ;
+    string webUrl ;
+    printf(YELLOW"\n\n\n\n\n\n\n\n\t\t\t\t\t\t\t    请 输 入 地 点 查 询 网 址  ：   \n\n"END);
+    cin >> webUrl  ;
+    string query2= "INSERT INTO City VALUES(NULL, '" + name +"' , '"+ webUrl + "' )"  ;
+    cout << query2 << endl ;
+    
+    int t =  mysql_real_query(mysql ,query2.c_str(),query2.size());
+    if(t != 0 )    cout << "server mysql_real_query" << endl ;
 
-
-
-// int Graph::AddCity()  //增 加 一 个  地 点
-// {
-
-// }
+}
 // int Graph::AddRoad() // 增 加 一 条 路  线  
 // {
 // }
-// int Graph::SetNet()  //我 要 布 网  
-// {
+int Graph::SetNet()  //我 要 布 网  
+{
+    
 
-// } 
+} 
+void Map::primTree(int nodeIndex)   //找到最小生成树 prim 算法
+{
+    cout << "pNodeArray[nodeIndex].m_cData == " << pNodeArray[nodeIndex].m_cData << endl ;
+    int value = 0 ;
+    int edgeCount = 0 ;
+    vector<int> nodeVec ;
+    vector<Edge> edgeVec ;
+
+    nodeVec.push_back(nodeIndex);
+    pNodeArray[nodeIndex].visted = true;
+
+    while(edgeCount < MaxVertexCount- 1 )
+    {
+        int temp = nodeVec.back();   //再取出来
+        for(int i = 0;i< MaxVertexCount ; ++i){
+            getValueFromMartix(temp,i,value);
+            if(value != 0)
+            {
+                if(pNodeArray[i].visted  != true)
+                {
+                    Edge edge(temp,i,value);
+                    edgeVec.push_back(edge);  //备选边,
+                    //为什么不会重复放入呐？二维矩阵只是一个关系图，需要什么去查看就行了，
+                    //真正表示边有没有被访问的是Edge 这个对象
+                }
+            }
+        }
+        //从可选边的集合中找到最小的边
+        int edgeIndex= getMinEdge(edgeVec); //返回另一条（对面）边的索引
+        edgeVec[edgeIndex].selected = true ;
+
+    cout << " edgeVec[edgeIndex].indexA,B == " << edgeVec[edgeIndex].indexA << "," << edgeVec[edgeIndex].indexB  << endl ;
+    cout << "edgeVec[edgeIndex].weight == " << edgeVec[edgeIndex].weight << endl ;
+   cout << endl << endl ;
+
+        pEdge[edgeCount] = edgeVec[edgeIndex];
+        edgeCount++ ;
+        int NextNodeIndex = edgeVec[edgeIndex].indexB ;
+        nodeVec.push_back(NextNodeIndex);
+        pNodeArray[NextNodeIndex].visted = true ;
+        cout << "pNodeArrayp[NextNodeIndex].m_cdata == " << pNodeArray[NextNodeIndex].m_cData << endl ;
+    }
+}
