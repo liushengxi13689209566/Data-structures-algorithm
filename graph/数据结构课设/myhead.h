@@ -100,10 +100,11 @@ private:
     int  GraphUserListCityTraffic();
     int  GraphUserQueryCityInformation() ;
     int  getCityIndex(std::string  ) ;
-    void  dfs(int index_A, int index_B, int depth =  1);
+   
     void  ddffss(int index_A, int index_B, int depth = 1 ) ;
     int  printRoute(int index_A ,int index_B ) ;
     int  printRouteByCount(int ,int )  ;
+    int  deleteACity() ;
 
 
   

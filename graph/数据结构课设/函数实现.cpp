@@ -32,15 +32,6 @@ Graph::Graph()
     }
     vexnum = 0 ;
     arcsnum = 0 ;
-    for(int i= 0;i< MAXMAX ;++i)
-    {
-        for(int j = 0 ;j < MAXMAX ;++j)
-            SmallPath[i][j]= MAXMAX ;
-    }
-    k = 0 ;
-    for(int i= 0 ;i< 1000 ;i++)
-        nodes[i] = MAXMAX ;
-
 }
 
 Graph::~Graph()
@@ -290,7 +281,7 @@ int Graph::GraphUserQueryCityInformation()  //某城 市 信 息 查 询,GraphUs
     }
 }
 
-int Graph::GraphUserQueryRoute() //查 询 两 地 之 间 的 线 路  
+int Graph::GraphUserQueryRoute()    //查 询 两 地 之 间 的 线 路  
 {
     string start ,end ;
     printf(YELLOW"\n\n\n\n\n\n\n\n\t\t\t\t\t\t\t    请 输 入 起 点 ：   \n\n"END);
@@ -299,9 +290,11 @@ int Graph::GraphUserQueryRoute() //查 询 两 地 之 间 的 线 路
     cin >> end ;
 
     int index_A,index_B ;
-    index_A = getCityIndex(start);
+    index_A = getCityIndex(start); 
     index_B = getCityIndex(end);
-    cout <<"0.**********************************************k   ==   "   <<  k   <<    endl  ;
+
+    printRoute(index_A,index_B) ;
+
     int choice ;
     do
     {
@@ -311,8 +304,7 @@ int Graph::GraphUserQueryRoute() //查 询 两 地 之 间 的 线 路
         printf(BLUE  "\t\t\t\t\t\t\t    1.距 离 最 优  \n\n"END);  
         printf(RED   "\t\t\t\t\t\t\t    2.money  最 少 \n\n" END);
         printf(BLUE  "\t\t\t\t\t\t\t    3.时 间 最  短   \n\n"END); 
-        printf(BLUE  "\t\t\t\t\t\t\t    4.查 看 所 有 路 线  \n\n"END);  
-        printf(RED   "\t\t\t\t\t\t\t    5.      取   消\n\n" END);
+        printf(RED   "\t\t\t\t\t\t\t    4.      取   消\n\n" END);
         printf(      "\t\t\t\t\t\t\t    请输入你的选择 ：" );
         cin >> choice ;
         switch(choice)
@@ -321,112 +313,58 @@ int Graph::GraphUserQueryRoute() //查 询 两 地 之 间 的 线 路
             case 1:  /*printRouteBydistance();  */ break ;
             case 2:  /*printRouteByMoney() ;*/break ;
             case 3:  /*printRouteByTime() ;  */break;
-            case 4:  printRoute(index_A,index_B);  break;
-            case 5: break ;
+            case 4: break ;
             default :printf(RED"\n\n\t\t\t\t\t\t\t输入有错～～～,请检查后重新输入!!!\n"END); sleep(1) ;  break ;
         }
-    }while(choice != 5) ;
+    }while(choice != 4 ) ;
     return 0;
 }
-
-
-
 int Graph::printRouteByCount(int index_A ,int index_B)  //集中精力处理SmallPath 
 {
-    int count  =  0 ;
-    k = 0 ;
-    cout << " #########################################" << endl ;
-    cout <<"1.**********************************************k   ==   "   <<  k   <<    endl  ;
+    // cout << "k== " << k << endl ;
+    // for(int i= 0;i< k  ;++i)
+    // {
+    //     for(int j = 0 ;j <  15  ;++j)
+    //         //if(SmallPath[i][j] != MAXMAX )
+    //             cout << SmallPath[i][j]  <<  " " ;
+    //     cout << endl ;
+    // }
+    // cout << " %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% " << endl ;
 
-
-    ddffss(index_A,index_B,1) ;
-
-    cout <<"2.**********************************************k   ==   "   <<  k   <<    endl  ;
-
-
-    for(int i= 0;i< k  ;++i)
-    {
-        for(int j = 0 ;j < k ;++j)
-            cout << SmallPath[i][j]  <<  " " ;
-            cout << endl ;
-    }
-
-    cout << " @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@" << endl ;
-    for(int i= 0;i< MAXMAX ;++i)
-    {
-        count  = 0  ;
-        for(int j = 1 ; j < MAXMAX ;++j)
-        {
-            if(SmallPath[i][j] != MAXMAX  )
-                count++ ;
-        }
-        SmallPath[i][0] = count ;
-    }
-    
-
-    for(int i= 0;i< 20 ;++i)
-    {
-        for(int j = 0 ;j < 20 ;++j)
-            cout << SmallPath[i][j]  <<  " " ;
-            cout << endl ;
-    }
-    cout << " &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&  " << endl ;
-
-
-    int min = SmallPath[0][0] ,index = 0  ;
-    cout << "min == " << min << endl ;  // 3
-    cout << "index  == " << index  << endl ;  // 3
-    for(int i = 0 ;i < MAXMAX ;++i)
+    int min = SmallPath[1][0], index = 1 ;
+    for(int i = 0 ; i <  k ;++i)
     {   
         if(SmallPath[i][0] < min )
         {
             min = SmallPath[i][0];
             index =  i ;
-            cout << "min == " << min << endl ;  // 3
-            cout << "index  == " << index  << endl ;  // 3
         }
     }
-    cout << "min == " << min << endl ;  // 3
-    cout << "index  == " << index  << endl ;  // 3
-    for(int i= 0;i< 20 ;++i)
+    for(int j =  1 ;j < MAXMAX ;++j)
     {
-        for(int j = 0 ;j < 20 ;++j)
-            cout << SmallPath[i][j]  <<  " " ;
-            cout << endl ;
+        if(SmallPath[index][j] != MAXMAX )
+            cout <<  vex[SmallPath[index][j]].CityName << "---> "  ;
     }
-    cout << " %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% " << endl ;
-    for(int i = 0 ;i< MAXMAX ;++i)
-    {
-        if(SmallPath[index][i] != MAXMAX )
-            cout <<  vex[SmallPath[index][i]].CityName << "---> "  ;
-    }
-    cout << endl ;
-    exit(0);
-
+    cout << endl  ; 
 }
-
 
 void Graph::ddffss(int index_A, int index_B, int depth)
 {
     nodes[depth] = index_A  ;
     vex[index_A].visted = true ;
-
     if ( index_A == index_B) 
     {
-        k++ ;
+      
         for (int i = 1 ; i <= depth; i++)
         {
             SmallPath[k][i] = nodes[i] ;  
             cout <<   vex[nodes[i]].CityName  <<  "---->> "   ;
         }
+        SmallPath[k][0] = depth + 1  ;
+        k++ ;
         cout  <<  endl;
         return ;
     }
-    // for (int i = 0; i < vexnum  ; i++)
-    // {
-    //     cout << arcs_distance[index_A][i] << "   " ;
-    // }
-    // cout <<  endl   ;
     for (int i = 0; i < vexnum  ; i++)
     {
         if (arcs_distance[index_A][i] != MAXMAX ) 
@@ -441,14 +379,113 @@ void Graph::ddffss(int index_A, int index_B, int depth)
     }
 }
 
-int Graph::printRoute(int index_A ,int index_B ) //查 询 两 地 之 间 的 所 有 路 线
+int Graph::printRoute(int index_A ,int index_B ) //查询两地之间的所有路线,第一个执行的函数
 {
+/****************************初始化*********************/
+    for(int i= 0;i< MAXMAX ;++i)
+    {
+        for(int j = 0 ;j < MAXMAX ;++j)
+            SmallPath[i][j]= MAXMAX ;
+    }
     k = 0 ;
+    for(int i= 0 ;i< 1000 ;i++)
+        nodes[i] = MAXMAX ;
     ddffss(index_A,index_B ) ;
 }
 
-/*****************************************管理员****************************************/
+/*****************************************管理员(提供与数据库交互的接口)****************************************/
 int Graph::GraphRoot()
 {
-
+    int choice  ;
+    MYSQL_RES *res ;
+    MYSQL_ROW row ;
+    mysql = mysql_init(NULL);   //打开数据库
+    if(!mysql)   cout << "数据库初始化出错  " << endl ;
+    mysql_connect(mysql) ; 
+    do
+    {
+        //printf("\033c");
+        printf(YELLOW"\n\n\n\n\n\n\n\n\t\t\t\t\t\t\t    0.删 除 一 个 地 点   \n\n"END); //一旦要选择排序就意味着
+                                                                                        //必须要进行存储
+        printf(BLUE  "\t\t\t\t\t\t\t    1.撤 销 路 线  \n\n"END);  
+        printf(RED   "\t\t\t\t\t\t\t    2.增 加 一 个  地 点 \n\n" END);
+        printf(BLUE  "\t\t\t\t\t\t\t    3.增 加 一 条 路  线   \n\n"END); 
+        printf(BLUE  "\t\t\t\t\t\t\t    4.我 要 布 网 \n\n"END);  
+        printf(RED   "\t\t\t\t\t\t\t    5.      取   消\n\n" END);
+        printf(      "\t\t\t\t\t\t\t    请输入你的选择 ：" );
+        cin >> choice ;
+        switch(choice)
+        {
+            case 0:  deleteACity() ;  break ;
+            case 1:  /*undoRoad();  */ break ;
+            case 2:  /*AddCity() ;*/break ;
+            case 3:  /*AddRoad() ;  */break;
+            case 4:  /*SetNet();*/  break;
+            case 5: break ;
+            default :printf(RED"\n\n\t\t\t\t\t\t\t输入有错～～～,请检查后重新输入!!!\n"END); sleep(1) ;  break ;
+        }
+    }while(choice != 5) ;
+    close_connection(mysql);
+    return 0;
 }
+int  Graph::deleteACity()  //删 除 一 个 地 点  success 
+{
+    string name ;
+    printf(YELLOW"\n\n\n\n\n\n\n\n\t\t\t\t\t\t\t    请 输 入 地 点 名 称 ：   \n\n"END);
+    cin >> name ;
+
+    int index_A ;   // 为了删除边的信息，必须要它所对应的下标
+    index_A = getCityIndex(name) ; 
+    // cout << index_A << endl ;
+    string temp = to_string(index_A);
+    string query2= "delete from Edge  where  index_A =   " + temp + "  or  index_B =  " + temp  ;
+    // cout << query2 << endl ;
+    
+    int t =  mysql_real_query(mysql ,query2.c_str(),query2.size());
+    if(t != 0 )    cout << "server mysql_real_query" << endl ;
+    
+    string query1 = "delete from City  where CityName =  '"+ name + "'" ;
+    t =  mysql_real_query(mysql ,query1.c_str(),query1.size());
+    if(t != 0 )    cout << "server mysql_real_query" << endl ;
+
+    
+}
+int Graph::undoRoad()  //撤 销  路 线 
+{
+    string  start ,end ;
+    printf(YELLOW"\n\n\n\n\n\n\n\n\t\t\t\t\t\t\t    请 输 入 起 点 ：   \n\n"END);
+    cin >> start ;
+    printf(BLUE  "\t\t\t\t\t\t\t    请 输 入 终 点 ：   \n\n"END); 
+    cin >> end ;
+
+    int index_A，index_B  ;   
+    index_A = getCityIndex(start) ; 
+    index_B = getCityIndex(end);
+   
+    string temp_A = to_string(index_A);
+    string temp_B = to_string(index_B) ;
+
+    string query2= "delete from Edge  where  index_A =   " + temp + "  or  index_B =  " + temp  ;
+
+    int t =  mysql_real_query(mysql ,query2.c_str(),query2.size());
+    if(t != 0 )    cout << "server mysql_real_query" << endl ;
+    
+    string query1 = "delete from City  where CityName =  '"+ name + "'" ;
+    t =  mysql_real_query(mysql ,query1.c_str(),query1.size());
+    if(t != 0 )    cout << "server mysql_real_query" << endl ;
+}
+
+
+
+
+// int Graph::AddCity()  //增 加 一 个  地 点
+// {
+
+// }
+// int Graph::AddRoad() // 增 加 一 条 路  线  
+// {
+// }
+// int Graph::SetNet()  //我 要 布 网  
+// {
+
+// } 
