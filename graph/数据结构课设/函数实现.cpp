@@ -350,7 +350,7 @@ int Graph::printRouteByCount(int index_A ,int index_B)  //集中精力处理Smal
 
 
 
-// int Graph::printRouteBydistance() //Dijkstra 算法
+// int Graph::printRouteBydistance()    //Dijkstra 算法
 // {
 
 
@@ -507,24 +507,29 @@ int Graph::AddCity()  //增 加 一 个  地 点 success
 // }
 int Graph::SetNet()  //我 要 布 网  
 {
-    
-
+    string  start ;
+    printf(YELLOW"\n\n\n\n\n\n\n\n\t\t\t\t\t\t\t    请 输 入 起 点 ：   \n\n"END);
+    cin >> start ;
+    int index = getCityIndex(start);
+    primTree(index);
+    return  0; 
 } 
-void Map::primTree(int nodeIndex)   //找到最小生成树 prim 算法
+
+void Graph::primTree(int nodeIndex)    // 找到最小生成树 prim 算法    布网！！！！ （根据距离～～）   
 {
-    cout << "pNodeArray[nodeIndex].m_cData == " << pNodeArray[nodeIndex].m_cData << endl ;
+    cout << "veex[nodeIndex].cityname   == " << vex[nodeIndex].CityName  << endl ;
     int value = 0 ;
     int edgeCount = 0 ;
-    vector<int> nodeVec ;
-    vector<Edge> edgeVec ;
+    vector<int> nodeVec ;   //  点 集
+    vector<Edge> edgeVec ;  //  边 集  
 
-    nodeVec.push_back(nodeIndex);
-    pNodeArray[nodeIndex].visted = true;
+    nodeVec.push_back(index) ;
+    pNodeArray[index].visted = true ;
 
-    while(edgeCount < MaxVertexCount- 1 )
+    while(edgeCount < MAXSIZE - 1 )
     {
         int temp = nodeVec.back();   //再取出来
-        for(int i = 0;i< MaxVertexCount ; ++i){
+        for(int i = 0;i< MAXSIZE  ; ++i){
             getValueFromMartix(temp,i,value);
             if(value != 0)
             {
@@ -539,17 +544,17 @@ void Map::primTree(int nodeIndex)   //找到最小生成树 prim 算法
         }
         //从可选边的集合中找到最小的边
         int edgeIndex= getMinEdge(edgeVec); //返回另一条（对面）边的索引
-        edgeVec[edgeIndex].selected = true ;
+        edgeVec[edgeIndex].selected = true ;  
 
-    cout << " edgeVec[edgeIndex].indexA,B == " << edgeVec[edgeIndex].indexA << "," << edgeVec[edgeIndex].indexB  << endl ;
-    cout << "edgeVec[edgeIndex].weight == " << edgeVec[edgeIndex].weight << endl ;
-   cout << endl << endl ;
+        cout << " edgeVec[edgeIndex].indexA,B == " << edgeVec[edgeIndex].indexA << "," << edgeVec[edgeIndex].indexB  << endl ;
+        cout << "edgeVec[edgeIndex].weight == " << edgeVec[edgeIndex].weight << endl ;
+        cout << endl << endl ;
 
         pEdge[edgeCount] = edgeVec[edgeIndex];
         edgeCount++ ;
-        int NextNodeIndex = edgeVec[edgeIndex].indexB ;
-        nodeVec.push_back(NextNodeIndex);
-        pNodeArray[NextNodeIndex].visted = true ;
+        int Nextindex = edgeVec[edgeIndex].indexB ;
+        nodeVec.push_back(Nextindex);
+        pNodeArray[Nextindex].visted = true ;
         cout << "pNodeArrayp[NextNodeIndex].m_cdata == " << pNodeArray[NextNodeIndex].m_cData << endl ;
     }
 }

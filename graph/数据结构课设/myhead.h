@@ -28,7 +28,7 @@
 #define DB_NAME  "Graph"      // 以 root  的身份登录
 #define	PASSWD    "thq520&iwwfyf"
 
-#define  MAXSIZE 52 
+#define  MAXSIZE 52  // 最大顶点数 
 #define  MAXMAX    999
 #define  TT  int  
 #define FilePath   
