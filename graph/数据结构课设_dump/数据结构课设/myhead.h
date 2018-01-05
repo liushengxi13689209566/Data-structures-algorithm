@@ -30,9 +30,9 @@
 #define	PASSWD    "thq520&iwwfyf"
 
 #define  MAXSIZE  52  // 最大顶点数 
-#define  MAXMAX       65535
-  
-
+#define  MAXMAX    999
+#define  TT  int  
+#define FilePath   
 
 
 class Graph ;
@@ -41,7 +41,7 @@ class Node{
     Node() = default ;
     //~Node() ;
     private:
-    int CityNumbers = 0; //城市编号
+    TT CityNumbers = 0; //城市编号
     std::string CityName ; //名称
     std::string QueryUrl ; //信息查询网址
     bool visted  = false ;  // 为了遍历的时候，判断是否能够访问 
@@ -73,16 +73,25 @@ public:
     int GraphRoot() ;
 
 
+
+
+
+
+
+
+
+
+
 /*****************************************私有成员****************************************/
 private:
-    int  arcs_distance[MAXSIZE][MAXSIZE] = { 0 } ; //代表有弧相连和权值（即公里数，票价，时间等。。。）
+    TT  arcs_distance[MAXSIZE][MAXSIZE] = { 0 } ; //代表有弧相连和权值（即公里数，票价，时间等。。。）
     float arcs_fare[MAXSIZE][MAXSIZE] =  { 0.0 };   //如果用户选择了其中某一个进行查询（设置标志位）
-    int arcs_time[MAXSIZE][MAXSIZE] = { 0 } ; //数据是必然要存储的
+    TT arcs_time[MAXSIZE][MAXSIZE] = { 0 } ; //数据是必然要存储的
     Node vex[MAXSIZE] ;  //地点集合
-    int vexnum = 0 ;
-    int arcsnum = 0 ;
+    TT vexnum = 0 ;
+    TT arcsnum = 0 ;
     MYSQL *mysql ; //MYSQL 句柄
-    int  SmallPath[MAXSIZE][MAXSIZE] ={0};   //解决中转次数最少的问题
+    int  SmallPath[MAXMAX][MAXMAX] ={0};   //解决中转次数最少的问题
     int k = 0 ;
     int nodes[1000] ; 
 /*****************************************私有成员函数****************************************/
@@ -104,8 +113,8 @@ private:
     void getPath(int i ,int j,int path[][MAXSIZE]) ;
     int  printRouteBydistance(int index_A,int index_B) ;
     void Floyd(int F[][MAXSIZE],int index_A,int index_B) ;
+    void  Dijkstra(int start ,int end, int dist[], int path[][MAXSIZE]) ;
     void  printgraph() ;
-    void  Dijkstra(int begin,int end);
  
 
   

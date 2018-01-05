@@ -1,0 +1,28 @@
+11
+15
+兰州    https://baike.baidu.com/item/%E5%85%B0%E5%B7%9E/170826?fr=aladdin
+内蒙古    https://baike.baidu.com/item/%E5%86%85%E8%92%99%E5%8F%A4
+天水    https://baike.baidu.com/item/%E5%A4%A9%E6%B0%B4
+西安   https://baike.baidu.com/item/%E8%A5%BF%E5%AE%89/121614
+成都    https://baike.baidu.com/item/%E6%88%90%E9%83%BD/128473
+重庆  https://baike.baidu.com/item/%E9%87%8D%E5%BA%86/23586
+武汉   https://baike.baidu.com/item/%E6%AD%A6%E6%B1%89/106764
+上海   https://baike.baidu.com/item/%E4%B8%8A%E6%B5%B7/114606
+首尔  https://baike.baidu.com/item/%E9%A6%96%E5%B0%94/61723
+北京   https://baike.baidu.com/item/%E5%8C%97%E4%BA%AC/128981
+郑州   https://baike.baidu.com/item/%E9%83%91%E5%B7%9E
+0 1 1083   396  821
+0 2 290  92.5  302
+0 3  636  170.5 558
+3 4 715 112  600
+3 9 1085 148 926
+3 10 482 72.5 360
+3 6 745 135.5 620
+3 5 969 279  611
+5 6 876 138  660
+4 7 1953 606 1200
+5 10 1166 173.5 840
+9 8   945 800 520
+9 10 688 309 480
+9 7 1222 553.5 850
+7 8 1111 556 666

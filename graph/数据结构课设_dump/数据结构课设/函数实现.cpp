@@ -387,62 +387,76 @@ int Graph::printRouteByCount(int index_A ,int index_B)  //集中精力处理Smal
 }
 int Graph::printRouteBydistance(int index_A,int index_B)
 {
-    Dijkstra(index_A ,index_B);
+    int path[MAXSIZE][MAXSIZE]  = {0};
+    int dist[MAXSIZE];
+    Dijkstra(index_A ,index_B ,dist,path);
     return 0;
 } 
 
-void Graph::Dijkstra(int begin,int end)
+void Graph::Dijkstra( int start, int end, int dist[], int path[][MAXSIZE])
 {
-    cout << begin << end  << endl;
-    cout <<vexnum <<arcsnum << endl;
-    for(int i= 0;i< vexnum ;++i)
+    cout << start << "    "<< end << endl ;
+     int temp[MAXSIZE+1][MAXSIZE+1]={0} ;
+    for(int i= 0;i < MAXSIZE  ;++i)
     {
-        for(int j= 0 ;j< vexnum ;++j)
+        dist[i] = MAXMAX ;
+        for(int j = 0;j< MAXSIZE ;++j)
         {
-            cout << arcs_distance[i][j] << "  ";
+            path[i][j] = 0 ;
+            temp[i+1][j+1] = arcs_distance[i][j];
         }
-        cout << endl ;
     }
-	int v,w,k,min,v0;
-	int p[MAXSIZE],d[MAXSIZE];
-	int final[MAXSIZE];
-	v0 = end;
-	for(v=0;v< vexnum;v++){
-        
-		final[v]=0;
-		d[v]= arcs_distance[v0][v];
-		p[v]=v0;
-	}
-	final[v0]=v0;
-	d[v0]=0;
-	
-	for(v=1;v<vexnum;v++){
-		min=MAXMAX ;
-		for(w=0;w<vexnum;w++){
-			if(!final[w]&&d[w]<min){
-				k=w;
-				min=d[w];
-			}
-		}
-		final[k]=1;
-		for(w=0;w<vexnum;w++){
-			if(!final[w]&&(min+arcs_distance[k][w]<d[w])){
-				d[w]=min+arcs_distance[k][w];
-				p[w]=k;
-			}
-		}
-	}
-	k=begin;
-	printf("\n起点是 ：");
-	//printf("%s",G.name[k]);
-    cout << vex[k].CityName << endl;
-	while(1){
-		k=p[k];
-		// printf("->%s",G.name[k]);
-        cout << "------>"   << vex[k].CityName   ;
- 		if(k==end) break;
-	}
-	cout << d[begin] <<  endl ;
+    int mindist, i, j, k, t = 1;
+
+    //初始化
+    for(i = 1; i <= vexnum; i++){
+        dist[i] = temp[start][i];
+        if(temp[start][i] != MAXMAX )
+            path[i][1] = start;
+    }
+    path[start][0] = 1;
+
+    //寻求最短路径
+    for(i = 2; i <=  vexnum; i++){
+        mindist = MAXMAX ;
+        for(j = 1; j <=  vexnum; j++){
+            if(!path[j][0] && dist[j] < mindist){
+                mindist = dist[j];
+                k = j;
+            }
+        }
+        if(mindist == MAXMAX )  break;
+        path[k][0] = 1;
+        cout << "12345 "<< endl ;
+        //修改加入后的最短路径
+        for(j = 1; j <=  vexnum; j++){
+            if(!path[j][0] && temp[k][j] < MAXMAX && temp[k][j] + dist[k] < dist[j]){
+                dist[j] = dist[k] + temp[k][j];
+                 
+               //记录最短路径
+                t = 1;
+                while(path[k][t]){
+                    path[j][t] = path[k][t];
+                    t++;
+                }
+                path[j][t] = k;
+                path[j][t+1] = 0;
+            }
+        }
+    }
+    if(dist[end] == MAXMAX){
+        printf("\n\n\t  不存在通路!!!\n");
+        return;
+    }
+    //输出最短路径
+    cout  <<  vex[start].CityName  << "-----> "<< vex[end].CityName << "的最短路线为 ： " << endl ;
+    //printf("\n\n\t%s----->%s的最短路线：%s ", G->vex[start].name, G->vex[end].name, G->vex[start].name);
+      for(j = 2; path[end][j]; j++)
+        cout << "——> " <<  vex[path[end][j]].CityName ;
+    cout << "——> " <<  vex[end].CityName  ;
+    //printf("——>%s", G->vex[end].name);
+    printf("\n\t距离为：%d\n", dist[end]);
+
 }
 
 
@@ -482,9 +496,9 @@ void Graph::ddffss(int index_A, int index_B, int depth)
 int Graph::printRoute(int index_A ,int index_B ) //查询两地之间的所有路线,第一个执行的函数
 {
 /****************************初始化*********************/
-    for(int i= 0;i< MAXSIZE  ;++i)
+    for(int i= 0;i< MAXMAX ;++i)
     {
-        for(int j = 0 ;j < MAXSIZE ;++j)
+        for(int j = 0 ;j < MAXMAX ;++j)
             SmallPath[i][j]= MAXMAX ;
     }
     k = 0 ;

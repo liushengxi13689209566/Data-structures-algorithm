@@ -2,7 +2,7 @@
 	> File Name: main.cpp
 	> Author: 
 	> Mail: 
-	> Created Time: 2017年12月31日 星期日 10时47分03秒
+	> Created Time: 2018年01月02日 星期二 13时16分17秒
  ************************************************************************/
 
 #include<iostream>
@@ -10,15 +10,8 @@
 using namespace std;
 int main(void)
 {
-    Graph g ;
-    g.create(g);
-    g.print(g);
-    int dist[20] ;
-    int path[20][20];
-    g.Dijkstra(g,0,1,dist,path);
-
-    printf("\n");
-
+    Graph  gg ;
+	gg.create();
+    gg.GraphMenu() ;
     return 0;
-
 }

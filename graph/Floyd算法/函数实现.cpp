@@ -65,20 +65,7 @@ void Graph::Floyd(Graph &G ,int F[][20])
             path[i][j] = INFINITY ;        
         }
     }
-    /*for(int k= 0 ;k != G.vexnum ;++k)
-    {
-        for(int  i =0;i != G.vexnum ;++i)
-        {
-            for(int j= 0 ;j !=G.vexnum ;++j)
-            {
-                if(F[i][j] >  (F[i][k] + F[k][j]));
-                {
-                    F[i][j] = F[i][k] + F[k][j]; 
-                    path[i][j] =  k; //k 点作为中转点，存入
-                }
-            }
-        }
-    }*/
+    
     int n= G.vexnum ;
     for(int k = 0;k < n ; k++)
     {
@@ -94,31 +81,16 @@ void Graph::Floyd(Graph &G ,int F[][20])
             }
         }
     } 
-    for(int i= 0;i < 5  ;++i)
-    {
-        for(int j=0;j< 5;++j)
-        {
-            printf("path == %-8d",path[i][j]);
-        }
-        printf("\n");
-    }
-    for(int i= 0;i < 5  ;++i)
-    {
-        for(int j=0;j< 5;++j)
-        {
-            printf("F[][] == %-8d",F[i][j]);
-        }
-        printf("\n");
-    }
 
     printf("please input the start and end  \n");
     int start ,end ;
     cin >> start >> end ;
     getPath(start,end,path);
+    cout << endl ;
 }
 void Graph::getPath(int i ,int j,int path[][20]){
-    if(i==j)     return;
-    if(path[i][j] == INFINITY ) printf("%c ",j+'a');
+    if(i == j)     return;
+    if(path[i][j] != INFINITY ) printf("%d  ",j );
     else{
         getPath(i,path[i][j],path);
         getPath(path[i][j],j,path);

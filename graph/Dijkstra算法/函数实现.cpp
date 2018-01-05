@@ -56,6 +56,13 @@ void Graph::print(Graph &G)
 }
 void Graph::Dijkstra(Graph &G,int start,int end ,int *dist,int path[][20]) //path 初始化为-1
 {
+     for(int i= 0;i < 20 ;++i)
+    {
+        for(int j=0;j< 20;++j)
+        {
+            path[i][j] = -1;
+        }
+    }
     for(int i= 0;i != G.vexnum ;++i)
     {
         dist[i] = G.arcs[start][i] ; //把该行抽离出来
@@ -96,6 +103,16 @@ void Graph::Dijkstra(Graph &G,int start,int end ,int *dist,int path[][20]) //pat
                 }
             }
         }
+        for(int i= 0; i< 20 ;i++)
+        {
+            for(int j=1;j< 20 ;++j)
+            {
+                if(path[i][j] != -1 )
+                    cout << G.vex[path[i][j]].str << "  " ;
+            }
+            cout << endl ;
+        }
+          
     }
 }
 
