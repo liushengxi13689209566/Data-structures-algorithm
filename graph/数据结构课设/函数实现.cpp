@@ -39,19 +39,13 @@ void Graph::close_connection(MYSQL *mysql)
 {
     mysql_close(mysql);
 }
-/*************************************关于图的一些函数**************************************/
-int Graph::create()     //读入信息从而创建图
+void Graph::getDatabases() //从数据库中得到数据
 {
     int index ,index_A ,index_B  ;
     MYSQL_RES *res ;
     MYSQL_ROW row ;
-
-    mysql = mysql_init(NULL);   //打开数据库
-    if(!mysql)   cout << "数据库初始化出错  " << endl ;
-    mysql_connect(mysql) ;
-
     string query1  = "select  *   from  City " ;
-    int t =  mysql_real_query(mysql ,query1.c_str(),query1.size());
+    int t =  mysql_real_query(mysql ,query1.c_str(),query1.size()) ;
     if(t != 0 )    cout << "server mysql_real_query" << endl ;
     res = mysql_store_result(mysql) ;
     if( !res )     cout << "server mysql_real_query" << endl ;
@@ -59,7 +53,6 @@ int Graph::create()     //读入信息从而创建图
     int a = mysql_num_rows(res) ;
     vexnum = a ;
     printf("a== %d \n",a);
-
     for(int i =  0 ;i < a ;++i)
     {
         row = mysql_fetch_row(res);
@@ -67,8 +60,8 @@ int Graph::create()     //读入信息从而创建图
         index = atoi(row[0]) - 1 ;
         cout << "index == " << index << endl ;
         this->vex[index].CityNumbers  = atoi(row[0]);
-        this->vex[index].CityName =  row[1];
-        this->vex[index].QueryUrl  = row[2];
+        this->vex[index].CityName =  row[1] ;
+        this->vex[index].QueryUrl  = row[2] ;
 
         cout << vex[i].CityNumbers << " "<< vex[i].CityName << "  "<< vex[i].QueryUrl << endl ;
     }
@@ -94,7 +87,20 @@ int Graph::create()     //读入信息从而创建图
         this->arcs_time[index_A][index_B] = atoi(row[5]);
         this->arcs_time[index_B][index_A] = atoi(row[5]);
     }
-   
+}
+/*************************************关于图的一些函数**************************************/
+int Graph::create()     //读入信息从而创建图
+{
+    int index ,index_A ,index_B  ;
+
+    mysql = mysql_init(NULL);   //打开数据库
+    if(!mysql)   cout << "数据库初始化出错  " << endl ;
+    mysql_connect(mysql) ;
+
+    getDatabases() ;
+    
+    close_connection(mysql);
+
     printf("arc_distance[%d][]\n");
     for(int i= 0;i < vexnum ;++i)
     {
@@ -110,11 +116,10 @@ int Graph::create()     //读入信息从而创建图
     {
         cout << vex[i].CityNumbers << vex[i].CityName << vex[i].QueryUrl << endl ;
     }
-    close_connection(mysql);
+
 
     return 0;
 }
-
 /**********************************************用户****************************************/
 int  Graph::GraphMenu()
 {
@@ -223,14 +228,14 @@ void Graph::printgraph()   //打印学校平面图
 int Graph::GraphUserListInfo()  // 查 询 基 本 信 息,GraphUser case 0 :
 {
     printf(GREEN"\n\n\n\n\n\n\t\t\t\t\t\t城 市 基 本 信 息  为 ：\n\n\n"END);
-    printf(YELLOW"\t\t\t\t\t\t\t 城市<------>城市 ： 距离   费用   耗费时间   \n\n"END);
+    printf(YELLOW"\t\t\t\t\t\t 城市<------>城市 ： 距离   费用   耗费时间   \n\n"END);
     for(int i= 0 ;i< vexnum ;++i)
     {
         for(int j = 0 ;j <  i  ;++j)  //无向图，查一半
         {
             if(arcs_distance[i][j] != MAXMAX )
             {
-                cout << vex[i].CityName   << "<------>" <<  vex[j].CityName 
+                cout << "\t\t\t\t\t\t "<<vex[i].CityName   << "<------>" <<  vex[j].CityName 
                 << "  ： " << arcs_distance[i][j] <<  "  "
                 << arcs_fare[i][j]  << "  "
                 << arcs_time[i][j]  << endl  ;   
@@ -274,7 +279,7 @@ int Graph::GraphUserListCityTraffic()//某城市交通情况查询,GraphUser:::G
     int  index = getCityIndex(name) ;
 
     printf(GREEN"\n\n\n\n\n\n\t\t\t\t\t\t城 市 交 通 情 况 为 ：\n\n\n"END);
-    printf(YELLOW"\t\t\t\t\t\t\t 城市<------>城市 ： 距离   费用   耗费时间   \n\n"END);
+    printf(YELLOW"\t\t\t\t\t\t 城市<------>城市 ： 距离   费用   耗费时间   \n\n"END);
 
     for(int i= 0 ;i< vexnum ;++i)
     {
@@ -284,7 +289,7 @@ int Graph::GraphUserListCityTraffic()//某城市交通情况查询,GraphUser:::G
             {
                 if(arcs_distance[i][j] != MAXMAX )
                 {
-                    cout << vex[index].CityName   << "<------>"  << vex[j].CityName 
+                    cout << "\t\t\t\t\t\t "<<vex[index].CityName   << "<------>"  << vex[j].CityName 
                     << "  ： " << arcs_distance[i][j] <<  "  "   //有疑问，感觉应该是arcs[index][j];
                     << arcs_fare[i][j]  << "  "
                     << arcs_time[i][j]  << endl  ;   
@@ -308,7 +313,7 @@ int Graph::GraphUserQueryCityInformation()  //某城 市 信 息 查 询,GraphUs
     switch(pid_love)
     {
         case -1:   printf("fork pid_love  ERROR !!!\n") ;return 0;
-        case 0 :   system(name.c_str());
+        case 0 :   system(name.c_str()) ;   sleep(8); exit(1) ;
         default:  break ;   //父进程再不管子进程了
     }
 }
@@ -486,9 +491,11 @@ int Graph::GraphRoot()
     int choice  ;
     MYSQL_RES *res ;
     MYSQL_ROW row ;
+
     mysql = mysql_init(NULL);   //打开数据库
     if(!mysql)   cout << "数据库初始化出错  " << endl ;
     mysql_connect(mysql) ; 
+
     do
     {
         //printf("\033c");
@@ -534,6 +541,7 @@ int  Graph::deleteACity()  //删 除 一 个 地 点  success
     string query1 = "delete from City  where CityName =  '"+ name + "'" ;
     t =  mysql_real_query(mysql ,query1.c_str(),query1.size());
     if(t != 0 )    cout << "server mysql_real_query" << endl ;
+    getDatabases();
 
     
 }
@@ -562,6 +570,7 @@ int Graph::undoRoad()  // 撤 销  路 线  success
     // cout <<" query1 ==  " << query1 << endl ;
     t =  mysql_real_query(mysql ,query1.c_str(),query1.size());
     if(t != 0 )    cout << "server mysql_real_query" << endl ;
+    getDatabases();
 }
 
 int Graph::AddCity()  //增 加 一 个  地 点 success
@@ -577,11 +586,36 @@ int Graph::AddCity()  //增 加 一 个  地 点 success
     
     int t =  mysql_real_query(mysql ,query2.c_str(),query2.size());
     if(t != 0 )    cout << "server mysql_real_query" << endl ;
+    getDatabases();
 
 }
-// int Graph::AddRoad() // 增 加 一 条 路  线  
-// {
-// }
+int Graph::AddRoad() // 增 加 一 条 路  线  
+{
+    string  start ,end ;
+    printf(YELLOW"\n\n\n\n\n\n\n\n\t\t\t\t\t\t\t    请 输 入 起 点 ：   \n\n"END);
+    cin >> start ;
+    printf(BLUE  "\t\t\t\t\t\t\t    请 输 入 终 点 ：   \n\n"END); 
+    cin >> end  ;
+    int distance,money,time ;
+    printf(YELLOW"\t\t\t\t\t\t\t    请 依 次 输 入 两 地 之 间 的 距离，花费，时间 ：   \n\n"END);
+    cin >> distance >> money >> time ;
+    int index_A,index_B  ;   
+    index_A = getCityIndex(start) ; 
+    index_B = getCityIndex(end) ;
+   
+    string temp_A = to_string(index_A);
+    string temp_B = to_string(index_B) ;
+
+    string query2 = "INSERT INTO Edge  VALUES(NULL, " + temp_A + "," + temp_B + " , " + 
+    to_string(distance) + " , " + to_string(money) + " , " + to_string(time) ;
+        // cout <<" query2 ==  " << query2 << endl ;
+
+    int t =  mysql_real_query(mysql ,query2.c_str(),query2.size());
+    if(t != 0 )    cout << "server mysql_real_query" << endl ;
+    
+    getDatabases();
+
+}
 
 int Graph::SetNet()  //我 要 布 网  
 {
@@ -609,7 +643,7 @@ void Graph::Prim(int start)    // 找到最小生成树 prim 算法    布网！
         }
     }
     //找最小值的边
-    for(e =  0 ; e < vexnum ; e++){
+    for(e =  0 ; e < vexnum -1 ; e++){
         min = MAXMAX ;
         for(k =  0;  k <   vexnum; k++){
             if(closedge[k].lowcost != 0 && closedge[k].lowcost < min){
@@ -621,7 +655,7 @@ void Graph::Prim(int start)    // 找到最小生成树 prim 算法    布网！
         <<   "距离为 "  <<  closedge[m].lowcost  << endl ;
         closedge[m].lowcost = 0;
         //加入后，更新closedge数组
-        for(i =  0 ; i <   vexnum; i++){
+        for(i =  0 ; i <   vexnum  ; i++){
             if(i != m &&  arcs_distance[m][i] < closedge[i].lowcost){
                 closedge[i].lowcost = arcs_distance[m][i];
                 closedge[i].adjvex = m;

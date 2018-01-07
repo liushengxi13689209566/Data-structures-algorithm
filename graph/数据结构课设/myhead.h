@@ -99,6 +99,8 @@ private:
     void Floyd(int F[][MAXSIZE],int index_A,int index_B) ;
     void printgraph() ;
     void Dijkstra(int begin,int end);
+    void getDatabases() ;//从数据库中得到数据
+    int  AddRoad();// 增 加 一 条 路  线  
  
 
   
