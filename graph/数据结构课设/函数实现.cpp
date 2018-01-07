@@ -8,16 +8,6 @@
 #include<iostream>
 #include"myhead.h"
 using namespace std;
-/*
-private:
-    TT  arcs_distance[MAXSIZE][MAXSIZE] = { 0 } ; //代表有弧相连和权值（即公里数，票价，时间等。。。）
-    float arcs_fare[MAXSIZE][MAXSIZE] =  { 0.0 };   //如果用户选择了其中某一个进行查询（设置标志位）
-    TT arcs_time[MAXSIZE][MAXSIZE] = { 0 } ; //数据是必然要存储的
-    Node vex[MAXSIZE] ;  //地点集合
-    TT vexnum = 0 ;
-    TT arcsnum = 0 ;
-    MYSQL *mysql ;
-*/
 /*****************************************构造与析构******************************************/
 Graph::Graph()
 {
@@ -34,7 +24,7 @@ Graph::Graph()
     arcsnum = 0 ;
 }
 
-Graph::~Graph()
+Graph::~Graph() //析构函数
 {
 }
 /*************************************数据库操作函数**************************************/
@@ -128,7 +118,6 @@ int Graph::create()     //读入信息从而创建图
 /**********************************************用户****************************************/
 int  Graph::GraphMenu()
 {
-
     int choice ;
     do
     {
@@ -156,7 +145,6 @@ int Graph::GraphUser()
     do
     {
         //printf("\033c");
-
         printf(GREEN"\n\n\n\n\n\n\n\n\t\t\t\t\t\t欢 迎 来 到 城 市 飞 车 信 息 查 询 系 统 \n\n\n"END);
         printf(YELLOW"\t\t\t\t\t\t\t    0.查 询 基 本 信 息   \n\n"END);
         printf(BLUE  "\t\t\t\t\t\t\t    1.查 询 某 城 市 基 本 情 况\n\n"END);  
@@ -177,7 +165,7 @@ int Graph::GraphUser()
     }while(choice !=  4 );
     return 0;
 }
-void Graph::printgraph()
+void Graph::printgraph()   //打印学校平面图
 {
     printf("\n\n\n\n\n ——————————————————————————————————————————————————\033[46;33m【北门】\033[0m————————————————————————\n");
     printf("|                                                  \033[44m        \033[0m             \033[32;43m【行政楼】\033[0m |\n");
@@ -256,7 +244,6 @@ int Graph::GraphUserQueryCity()  //查 询 某 城 市 基 本 情 况, GraphUse
     do
     {
         //printf("\033c");
-
         printf(YELLOW"\n\n\n\n\n\n\n\n\t\t\t\t\t\t\t    0.交 通 情 况  查 询   \n\n"END);
         printf(BLUE  "\t\t\t\t\t\t\t    1.城 市 信 息 查 询 \n\n"END);  
         printf(RED   "\t\t\t\t\t\t\t    2.      取   消\n\n" END);
@@ -271,7 +258,6 @@ int Graph::GraphUserQueryCity()  //查 询 某 城 市 基 本 情 况, GraphUse
         }
     }while(choice != 2);
 }
-
 int  Graph::getCityIndex(string name) // 得到某一个城市的下标
 {
     for(int i= 0 ;i< vexnum ; ++i)
@@ -280,8 +266,6 @@ int  Graph::getCityIndex(string name) // 得到某一个城市的下标
         return i ;
     }
 }
-
-
 int Graph::GraphUserListCityTraffic()//某城市交通情况查询,GraphUser:::GraphUserQueryCity case 0 :
 {
     string name ;
@@ -378,7 +362,7 @@ int Graph::printRouteByCount(int index_A ,int index_B)  //集中精力处理Smal
             index =  i ;
         }
     }
-    for(int j =  1 ;j < MAXMAX ;++j)
+    for(int j =  1 ;j < MAXSIZE ;++j)
     {
         if(SmallPath[index][j] != MAXMAX )
             cout <<  vex[SmallPath[index][j]].CityName << "---> "  ;
@@ -435,7 +419,7 @@ void Graph::Dijkstra(int begin,int end)
 	k=begin;
 	printf("\n起点是 ：");
 	//printf("%s",G.name[k]);
-    cout << vex[k].CityName << endl;
+    cout <<  endl << vex[k].CityName  ;
 	while(1){
 		k=p[k];
 		// printf("->%s",G.name[k]);
@@ -609,7 +593,7 @@ int Graph::SetNet()  //我 要 布 网
     Prim(index);
     return  0; 
 } 
-void Graph::Prim(int start)    // 找到最小生成树 prim 算法    布网！！！！ （根据距离～～） 有bug！！！！ 
+void Graph::Prim(int start)    // 找到最小生成树 prim 算法    布网！！！！ （根据距离～～） 有一点点小bug！！！！ 
 {
     struct{
         int adjvex;

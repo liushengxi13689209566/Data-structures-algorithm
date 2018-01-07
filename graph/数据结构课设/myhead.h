@@ -11,8 +11,6 @@
 #include<unistd.h>
 #include<stdlib.h>
 #include<mysql/mysql.h>
-#include<sstream>    //使用stringstream需要引入这个头文件  
-#include<fstream>  // 为了使用文件IO 
 #include<iostream>
 #include<queue>
 #include<string.h>
@@ -31,8 +29,6 @@
 
 #define  MAXSIZE  52  // 最大顶点数 
 #define  MAXMAX       65535
-  
-
 
 
 class Graph ;
@@ -49,10 +45,6 @@ class Node{
     friend Graph ;
 
 };
-
-
-
-
 class Graph{
 public:
  /*********************************构造与析构*****************************/
@@ -85,6 +77,7 @@ private:
     int  SmallPath[MAXSIZE][MAXSIZE] ={0};   //解决中转次数最少的问题
     int k = 0 ;
     int nodes[1000] ; 
+    int tag = 0 ; //来标记用哪个权值计算最短路径
 /*****************************************私有成员函数****************************************/
 
     void mysql_connect(MYSQL *mysql) ;
@@ -93,7 +86,7 @@ private:
     int  GraphUserQueryCityInformation() ;
     int  getCityIndex(std::string  ) ;
    
-    void  ddffss(int index_A, int index_B, int depth = 1 ) ;
+    void ddffss(int index_A, int index_B, int depth = 1 ) ;
     int  printRoute(int index_A ,int index_B ) ;
     int  printRouteByCount(int ,int )  ;
     int  deleteACity() ;
@@ -104,8 +97,8 @@ private:
     void getPath(int i ,int j,int path[][MAXSIZE]) ;
     int  printRouteBydistance(int index_A,int index_B) ;
     void Floyd(int F[][MAXSIZE],int index_A,int index_B) ;
-    void  printgraph() ;
-    void  Dijkstra(int begin,int end);
+    void printgraph() ;
+    void Dijkstra(int begin,int end);
  
 
   
