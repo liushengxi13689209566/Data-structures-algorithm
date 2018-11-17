@@ -1,0 +1,42 @@
+/*************************************************************************
+	> File Name: 阶乘后的零.cpp
+	> Author: Liu Shengxi 
+	> Mail: 13689209566@163.com
+	> Created Time: 2018年07月20日 星期五 12时14分04秒
+ ************************************************************************/
+/*给定一个整数 n，返回 n! 结果尾数中零的数量。
+
+示例 1:
+
+输入: 3
+输出: 0
+解释: 3! = 6, 尾数中没有零。
+示例 2:
+
+输入: 5
+输出: 1
+解释: 5! = 120, 尾数中有 1 个零.
+说明: 你算法的时间复杂度应为 O(log n) 。*/
+
+#include<iostream>
+using namespace std;
+class Solution {
+public:
+    int trailingZeroes(int n) {
+    	int count  = 0  ;
+    	int tmp  ;
+    	for (int i =  n; i != 0  ; --i) 
+    	{
+    		tmp = i ;
+    		while( i%5 == 0 ){
+    			++count ;    		
+    			tmp = tmp /5  ;
+    		}
+    	}
+    	return count ; 
+    }
+};
+int main(void) {
+
+}
+
