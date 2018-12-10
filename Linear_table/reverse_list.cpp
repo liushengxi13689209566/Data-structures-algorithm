@@ -26,6 +26,18 @@ class List
     {
         CreatList();
     }
+    ~List()
+    {
+        Node<T> *start = head;
+        Node<T> *end = start->next;
+        while (end)
+        {
+            delete start;
+            start = end;
+            end = end->next;
+        }
+        delete start;
+    }
     void CreatList()
     {
         head = new Node<T>(-100);
@@ -55,8 +67,9 @@ class List
             curr = beh;
             beh = beh->next;
         }
-        curr->next = head->next;
+        curr->next = head->next; /*处理`curr`指向最后一个节点*/
         head->next = curr;
+        /*处理链表的尾部 nullptr */
         rear->next = nullptr;
     }
     void Print()
