@@ -63,11 +63,20 @@ class Solution
 		{
 			if (s[i] == ' ' || i == 0)
 			{
-				if (tag != ' ')
+				int j;
+				if (i == 0)
 				{
-					for (int j = i + 1; j <= tag; j++)
-						result += s[j];
+					j = i;
+					tag--;
 				}
+				else
+					j = i + 1;
+				for (; j <= tag; j++)
+					result += s[j];
+
+				if (tag == s.size() - 1)
+					result += ' ';
+
 				tag = i;
 			}
 		}
