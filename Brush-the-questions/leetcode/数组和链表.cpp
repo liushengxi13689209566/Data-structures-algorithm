@@ -186,39 +186,7 @@ class Solution
         return false;
     }
 };
-/*
-			23. 合并K个排序链表
-合并 k 个排序链表，返回合并后的排序链表。请分析和描述算法的复杂度。
 
-示例:
-
-输入:
-[
-  1->4->5,
-  1->3->4,
-  2->6
-]
-输出: 1->1->2->3->4->4->5->6
-*/
-/**
- * Definition for singly-linked list.
- * struct ListNode {
- *     int val;
- *     ListNode *next;
- *     ListNode(int x) : val(x), next(NULL) {}
- * };
- */
-class Solution
-{
-  public:
-    ListNode *mergeKLists(vector<ListNode *> &lists)
-    {
-        ListNode *minNode;
-        for (int i = 0; i < lists.size(); i++)
-        {
-        }
-    }
-};
 /*将两个按升序排列的数组仍按升序合并存放到另一个数组中，要求每个
 数都一次到位，不得在新数组中重新排序。*/
 #include <stdio.h>
@@ -260,48 +228,119 @@ int main(void)
  *     ListNode(int x) : val(x), next(NULL) {}
  * };
  */
-
+//遍历解法
 class Solution
 {
   public:
     ListNode *mergeTwoLists(ListNode *l1, ListNode *l2)
     {
+        ListNode result = ListNode(-100);
+        ListNode *test = &result;
 
-        ListNode *result = l1->val <= l2->val ? l1 : l2;
-        ListNode *test = result;
+        ListNode *temp1 = l1;
+        ListNode *temp2 = l2;
 
-        ListNode *temp1 = l1->next;
-        ListNode *temp2 = l2->next;
-
-        if (l1->val == l2->val)
-        {
-            test->next = l2;
-            test = test->next;
-        }
         while (temp1 && temp2)
         {
-            if (temp1->val < temp2->val)
+            //注意这里判断了相等的情况
+            //temp1->val == temp2->val
+            if (temp1->val <= temp2->val)
             {
                 test->next = temp1;
                 temp1 = temp1->next;
                 test = test->next;
             }
-
-            else if (temp1->val > temp2->val)
+            else
             {
                 test->next = temp2;
                 temp2 = temp2->next;
                 test = test->next;
-            }
-            //temp1->val == temp2->val
-            else
-            {
             }
         }
         if (temp1)
             test->next = temp1;
         if (temp2)
             test->next = temp2;
-        return result;
+        return result.next;
+    }
+};
+//递归解法
+class Solution
+{
+  public:
+    ListNode *mergeTwoLists(ListNode *l1, ListNode *l2)
+    {
+        if (l1 == NULL)
+            return l2;
+        if (l2 == NULL)
+            return l1;
+        if (l1->val <= l2->val)
+        {
+            l1->next = mergeTwoLists(l1->next, l2);
+            return l1;
+        }
+        else
+        {
+            l2->next = mergeTwoLists(l1, l2->next);
+            return l2;
+        }
+    }
+};
+/*
+			23. 合并K个排序链表
+合并 k 个排序链表，返回合并后的排序链表。请分析和描述算法的复杂度。
+
+示例:
+
+输入:
+[
+  1->4->5,
+  1->3->4,
+  2->6
+]
+输出: 1->1->2->3->4->4->5->6
+*/
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode(int x) : val(x), next(NULL) {}
+ * };
+ */
+class Solution
+{
+  public:
+    ListNode *mergeKLists(vector<ListNode *> &lists)
+    {
+        ListNode *result = new (-100);
+        int len = lists.size();
+        while (len > 1)
+        {
+            for (int i = 0; i < ; i++)
+            {
+                mergeTwoLists(lists[i],lists[i+k]);
+            }
+        }
+        return result->next;
+    }
+
+  private:
+    ListNode *mergeTwoLists(ListNode *l1, ListNode *l2)
+    {
+        if (l1 == NULL)
+            return l2;
+        if (l2 == NULL)
+            return l1;
+        if (l1->val <= l2->val)
+        {
+            l1->next = mergeTwoLists(l1->next, l2);
+            return l1;
+        }
+        else
+        {
+            l2->next = mergeTwoLists(l1, l2->next);
+            return l2;
+        }
     }
 };
