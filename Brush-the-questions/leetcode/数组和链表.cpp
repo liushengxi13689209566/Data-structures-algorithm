@@ -313,16 +313,19 @@ class Solution
   public:
     ListNode *mergeKLists(vector<ListNode *> &lists)
     {
-        ListNode *result = new (-100);
         int len = lists.size();
+        if (len == 0)
+            return NULL;
         while (len > 1)
         {
-            for (int i = 0; i < ; i++)
+            int k = (len + 1) / 2;
+            for (int i = 0; i < len / 2; ++i)
             {
-                mergeTwoLists(lists[i],lists[i+k]);
+                lists[i] = mergeTwoLists(lists[i], lists[i + k]);
             }
+            len = k;
         }
-        return result->next;
+        return lists[0];
     }
 
   private:
