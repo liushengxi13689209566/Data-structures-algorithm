@@ -57,30 +57,30 @@ class Solution
 class Solution
 {
   public:
-	int majorityElement(vector<int> &nums)
-	{
-		int count = 1, result = nums[0];
+    int majorityElement(vector<int> &nums)
+    {
+        int count = 1, result = nums[0];
 
-		for (int i = 1; i < nums.size(); i++)
-		{
-			if (count == 0)
-				result = nums[i];
+        for (int i = 1; i < nums.size(); i++)
+        {
+            if (count == 0)
+                result = nums[i];
 
-			if (nums[i] == result)
-				count++;
-			else
-				count--;
-			// if (count > nums.size() / 2)
-			// 	return nums[i];
-		}
-		return result;
-	}
+            if (nums[i] == result)
+                count++;
+            else
+                count--;
+            // if (count > nums.size() / 2)
+            // 	return nums[i];
+        }
+        return result;
+    }
 };
 int main(void)
 {
-	vector<int> vv({2, 2, 1, 1, 1, 2, 2});
-	Solution s1;
-	std::cout << s1.majorityElement(vv) << std::endl;
+    vector<int> vv({2, 2, 1, 1, 1, 2, 2});
+    Solution s1;
+    std::cout << s1.majorityElement(vv) << std::endl;
 }
 /*
 		41. 缺失的第一个正数
@@ -105,33 +105,33 @@ int main(void)
 class Solution
 {
   public:
-	int firstMissingPositive(vector<int> &nums)
-	{
-		if (nums.size() == 0)
-			return 1;
-		sort(nums.begin(), nums.end());
-		int index = 0;
-		//考虑　[0] [] [-4,-3,-2,-1,0] 的几种情况
-		while (index < nums.size() - 1 && nums[index] <= 0)
-		{
-			index++;
-		}
-		int count = nums[index];
-		if (count != 1)
-			return 1;
+    int firstMissingPositive(vector<int> &nums)
+    {
+        if (nums.size() == 0)
+            return 1;
+        sort(nums.begin(), nums.end());
+        int index = 0;
+        //考虑　[0] [] [-4,-3,-2,-1,0] 的几种情况
+        while (index < nums.size() - 1 && nums[index] <= 0)
+        {
+            index++;
+        }
+        int count = nums[index];
+        if (count != 1)
+            return 1;
 
-		for (int i = index + 1; i < nums.size(); i++)
-		{
-			if (nums[i] != nums[i - 1])
-			{
-				if (nums[i] != count + 1)
-					break;
-				else
-					count++;
-			}
-		}
-		return count + 1;
-	}
+        for (int i = index + 1; i < nums.size(); i++)
+        {
+            if (nums[i] != nums[i - 1])
+            {
+                if (nums[i] != count + 1)
+                    break;
+                else
+                    count++;
+            }
+        }
+        return count + 1;
+    }
 };
 /*
 			141. 环形链表
@@ -172,19 +172,19 @@ class Solution
 class Solution
 {
   public:
-	bool hasCycle(ListNode *head)
-	{
-		ListNode *slow = head;
-		ListNode *fast = head;
-		while (fast && fast->next)
-		{
-			slow = slow->next;
-			fast = fast->next->next;
-			if (slow == fast)
-				return true;
-		}
-		return false;
-	}
+    bool hasCycle(ListNode *head)
+    {
+        ListNode *slow = head;
+        ListNode *fast = head;
+        while (fast && fast->next)
+        {
+            slow = slow->next;
+            fast = fast->next->next;
+            if (slow == fast)
+                return true;
+        }
+        return false;
+    }
 };
 /*
 			23. 合并K个排序链表
@@ -211,43 +211,43 @@ class Solution
 class Solution
 {
   public:
-	ListNode *mergeKLists(vector<ListNode *> &lists)
-	{
-		ListNode *minNode;
-		for (int i = 0; i < lists.size(); i++)
-		{
-		}
-	}
+    ListNode *mergeKLists(vector<ListNode *> &lists)
+    {
+        ListNode *minNode;
+        for (int i = 0; i < lists.size(); i++)
+        {
+        }
+    }
 };
 /*将两个按升序排列的数组仍按升序合并存放到另一个数组中，要求每个
 数都一次到位，不得在新数组中重新排序。*/
 #include <stdio.h>
 int main(void)
 {
-	int b[5] = {1, 6, 17, 56, 72};
-	int a[5] = {7, 23, 32, 33, 82};
-	int c[10], i, j, k, p;
-	i = j = k = 0;		   //i 对应 a 数组，j 对应 b 数组，k 对应 c 数组；
-	while (i < 5 && j < 5) //判断 a,b 两数组是否比较完毕；
-	{
-		if (a[i] < b[j])
-			c[k++] = a[i++];
-		else
-			c[k++] = b[j++];
-	}
-	if (i > 4) //把 b 赋给 c
-	{
-		for (p = j; p < 5; p++)
-			c[k++] = b[p];
-	}
-	if (j > 4) //把 a 赋给 c
-	{
-		for (p = i; p < 5; p++)
-			c[k++] = a[p];
-	}
-	for (i = 0; i < 10; i++) //输出 c
-		printf("%4d", c[i]);
-	printf("\n");
+    int b[5] = {1, 6, 17, 56, 72};
+    int a[5] = {7, 23, 32, 33, 82};
+    int c[10], i, j, k, p;
+    i = j = k = 0;         //i 对应 a 数组，j 对应 b 数组，k 对应 c 数组；
+    while (i < 5 && j < 5) //判断 a,b 两数组是否比较完毕；
+    {
+        if (a[i] < b[j])
+            c[k++] = a[i++];
+        else
+            c[k++] = b[j++];
+    }
+    if (i > 4) //把 b 赋给 c
+    {
+        for (p = j; p < 5; p++)
+            c[k++] = b[p];
+    }
+    if (j > 4) //把 a 赋给 c
+    {
+        for (p = i; p < 5; p++)
+            c[k++] = a[p];
+    }
+    for (i = 0; i < 10; i++) //输出 c
+        printf("%4d", c[i]);
+    printf("\n");
 }
 /*
 21. 合并两个有序链表
@@ -264,44 +264,44 @@ int main(void)
 class Solution
 {
   public:
-	ListNode *mergeTwoLists(ListNode *l1, ListNode *l2)
-	{
+    ListNode *mergeTwoLists(ListNode *l1, ListNode *l2)
+    {
 
-		ListNode *result = l1->val <= l2->val ? l1 : l2;
-		ListNode *test = result;
+        ListNode *result = l1->val <= l2->val ? l1 : l2;
+        ListNode *test = result;
 
-		ListNode *temp1 = l1->next;
-		ListNode *temp2 = l2->next;
+        ListNode *temp1 = l1->next;
+        ListNode *temp2 = l2->next;
 
-		if (l1->val == l2->val)
-		{
-			test->next = l2;
-			test = test->next;
-		}
-		while (temp1 && temp2)
-		{
-			if (temp1->val < temp2->val)
-			{
-				test->next = temp1;
-				temp1 = temp1->next;
-				test = test->next;
-			}
+        if (l1->val == l2->val)
+        {
+            test->next = l2;
+            test = test->next;
+        }
+        while (temp1 && temp2)
+        {
+            if (temp1->val < temp2->val)
+            {
+                test->next = temp1;
+                temp1 = temp1->next;
+                test = test->next;
+            }
 
-			else if (temp1->val > temp2->val)
-			{
-				test->next = temp2;
-				temp2 = temp2->next;
-				test = test->next;
-			}
-			//temp1->val == temp2->val
-			else
-			{
-			}
-		}
-		if (temp1)
-			test->next = temp1;
-		if (temp2)
-			test->next = temp2;
-		return result;
-	}
+            else if (temp1->val > temp2->val)
+            {
+                test->next = temp2;
+                temp2 = temp2->next;
+                test = test->next;
+            }
+            //temp1->val == temp2->val
+            else
+            {
+            }
+        }
+        if (temp1)
+            test->next = temp1;
+        if (temp2)
+            test->next = temp2;
+        return result;
+    }
 };
