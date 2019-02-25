@@ -25,16 +25,16 @@ using namespace std;
 class Solution
 {
   public:
-	void reverseString(vector<char> &s)
-	{
-		int len = s.size();
-		if (len <= 0)
-			return;
-		for (int i = 0, j = len - 1; i < j; i++, j--)
-		{
-			swap(s[i], s[j]);
-		}
-	}
+    void reverseString(vector<char> &s)
+    {
+        int len = s.size();
+        if (len <= 0)
+            return;
+        for (int i = 0, j = len - 1; i < j; i++, j--)
+        {
+            swap(s[i], s[j]);
+        }
+    }
 };
 
 /*给定一个字符串，逐个翻转字符串中的每个单词。
@@ -55,34 +55,34 @@ class Solution
 class Solution
 {
   public:
-	void reverseWords(string &s)
-	{
-		string result;
-		int tag = s.size() - 1;
+    void reverseWords(string &s)
+    {
+        string result;
+        int tag = s.size() - 1;
 
-		for (int i = s.size() - 1; i >= 0; i--)
-		{
-			if (s[i] == ' ' || i == 0)
-			{
-				int j;
-				if (i == 0)
-				{
-					j = i;
-					tag--;
-				}
-				else
-					j = i + 1;
-				for (; j <= tag; j++)
-					result += s[j];
+        for (int i = s.size() - 1; i >= 0; i--)
+        {
+            if (s[i] == ' ' || i == 0)
+            {
+                int j;
+                if (i == 0)
+                {
+                    j = i;
+                    tag--;
+                }
+                else
+                    j = i + 1;
+                for (; j <= tag; j++)
+                    result += s[j];
 
-				if (tag == s.size() - 1)
-					result += ' ';
+                if (tag == s.size() - 1)
+                    result += ' ';
 
-				tag = i;
-			}
-		}
-		s = result;
-	}
+                tag = i;
+            }
+        }
+        s = result;
+    }
 };
 /*请你来实现一个 atoi 函数，使其能将字符串转换成整数。
 
@@ -136,39 +136,73 @@ class Solution
 class Solution
 {
   public:
-	int myAtoi(string str)
-	{
-		double result = 0;
-		int tag = 1;
-		int frist = 0;
-		while (str[frist] == ' ')
-			frist++;
+    int myAtoi(string str)
+    {
+        double result = 0;
+        int tag = 1;
+        int frist = 0;
+        while (str[frist] == ' ')
+            frist++;
 
-		switch (str[frist])
-		{
-		case '-':
-			frist++;
-			tag = -1;
-			break;
-		case '+':
-			frist++;
-			break;
-		}
+        switch (str[frist])
+        {
+        case '-':
+            frist++;
+            tag = -1;
+            break;
+        case '+':
+            frist++;
+            break;
+        }
 
-		for (int i = frist; i < str.size(); i++)
-		{
+        for (int i = frist; i < str.size(); i++)
+        {
 
-			if (str[i] <= '9' && str[i] >= '0')
-				result = result * 10 + (str[i] - '0');
-			else
-				break;
-		}
-		result *= tag;
-		if (result > INT_MAX)
-			return INT_MAX;
-		else if (result < INT_MIN)
-			return INT_MIN;
-		else
-			return result;
-	}
+            if (str[i] <= '9' && str[i] >= '0')
+                result = result * 10 + (str[i] - '0');
+            else
+                break;
+        }
+        result *= tag;
+        if (result > INT_MAX)
+            return INT_MAX;
+        else if (result < INT_MIN)
+            return INT_MIN;
+        else
+            return result;
+    }
+};
+/*
+给定一个字符串，你需要反转字符串中每个单词的字符顺序，同时仍保留空格和单词的初始顺序。
+
+示例 1:
+
+输入: "Let's take LeetCode contest"
+输出: "s'teL ekat edoCteeL tsetnoc" 
+注意：在字符串中，每个单词由单个空格分隔，并且字符串中不会有任何额外的空格。
+*/
+class Solution
+{
+  public:
+    string reverseWords(string s)
+    {
+        int start = 0, k = 0;
+        for (int i = 0; i < s.size(); i++)
+        {
+            if (s[i] == ' ' || i == s.size() - 1)
+            {
+                // reserve(start,i);
+                if (i == s.size() - 1)
+                    k = i;
+                else
+                    k = i - 1;
+                for (int j = start; j < k; j++, k--)
+                {
+                    swap(s[j], s[k]);
+                }
+                start = i + 1;
+            }
+        }
+        return s;
+    }
 };
