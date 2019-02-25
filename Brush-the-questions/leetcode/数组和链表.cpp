@@ -403,7 +403,9 @@ class Solution
 输出: 0
 解释: 在这种情况下, 没有交易完成, 所以最大利润为 0。
 
-DP 
+解法：
+维持两个变量——minprice 和 maxprofit，
+它们分别对应迄今为止所得到的最小的谷值和最大的利润（卖出价格与最低价格之间的最大差值）。
 
 */
 class Solution
@@ -411,11 +413,15 @@ class Solution
   public:
     int maxProfit(vector<int> &prices)
     {
-        int dp[];
-        for ()
+        int minprice = INT_MAX;
+        int maxprofit = 0;
+        for (int i = 0; i < prices.size(); i++)
         {
-            dp[] = dp[] + ;
+            if (prices[i] < minprice)
+                minprice = prices[i];
+            else if (prices[i] - minprice > maxprofit)
+                maxprofit = prices[i] - minprice;
         }
-        return result;
+        return maxprofit;
     }
 };
