@@ -251,6 +251,7 @@ class Solution
 /*思路：这种解法对于两个数字a和b来说，如果将其都转为字符串，如果ab > ba，则a排在前面，比如9和34，由于934>349，
 所以9排在前面，再比如说30和3，由于303<330，所以3排在30的前面。
 按照这种规则对原数组进行排序后，将每个数字转化为字符串再连接起来就是最终结果。代码如下：*/
+
 class Solution
 {
   public:
@@ -310,13 +311,162 @@ class Solution
 只能使用额外的 O(1) 的空间。
 时间复杂度小于 O(n2) 。
 数组中只有一个重复的数字，但它可能不止重复出现一次。
+
+//鸽巢原理
+区别[1, n]中搜索，首先求出中点mid，然后遍历整个数组，统计所有小于等于mid的数的个数，
+如果个数大于mid，则说明重复值在[mid+1, n]之间，反之，重复值应在[1, mid-1]之间，然后依次类推，
+直到搜索完成，此时的low就是我们要求的重复值，参见代码如下：
 */
 class Solution
 {
   public:
     int findDuplicate(vector<int> &nums)
     {
+        int len = nums.size();
 
-        int return 0;
+        int low = 1, high = len - 1;
+        int count = 0;
+        int mid = low + ((high - low) >> 1);
+
+        while (low <= high)
+        {
+            count = 0;
+            for (auto i : nums)
+            {
+                if (i <= mid)
+                    count++;
+            }
+            if (count <= mid)
+                low = mid + 1;
+            else
+                high = mid - 1;
+            mid = low + ((high - low) >> 1);
+        }
+        return low;
+    }
+};
+/*
+打家劫舍
+你是一个专业的小偷，计划偷窃沿街的房屋。每间房内都藏有一定的现金，影响你偷窃的唯一制约因素就是相邻的房屋装有相互连通的防盗系统，如果两间相邻的房屋在同一晚上被小偷闯入，系统会自动报警。
+
+给定一个代表每个房屋存放金额的非负整数数组，计算你在不触动警报装置的情况下，能够偷窃到的最高金额。
+
+示例 1:
+
+输入: [1,2,3,1]
+输出: 4
+解释: 偷窃 1 号房屋 (金额 = 1) ，然后偷窃 3 号房屋 (金额 = 3)。
+     偷窃到的最高金额 = 1 + 3 = 4 。
+示例 2:
+
+输入: [2,7,9,3,1]
+输出: 12
+解释: 偷窃 1 号房屋 (金额 = 2), 偷窃 3 号房屋 (金额 = 9)，接着偷窃 5 号房屋 (金额 = 1)。
+     偷窃到的最高金额 = 2 + 9 + 1 = 12 。
+*/
+class Solution
+{
+  public:
+    int rob(vector<int> &nums)
+    {
+        if (nums.size() == 0)
+            return 0;
+        if (nums.size() == 1)
+            return nums[0];
+
+        vector<int> money(nums.size());
+        money[0] = nums[0];
+        money[1] = nums[1];
+        int result = money[0] > money[1] ? money[0] : money[1];
+        int max = 0;
+        for (int i = 2; i < nums.size(); i++)
+        {
+            //维护前 i-2 个数字的最大值
+            if (money[i - 2] > max)
+                max = money[i - 2];
+            money[i] += (max + nums[i]);
+            //维护最大值
+            if (money[i] > result)
+                result = money[i];
+        }
+        return result;
+    }
+};
+/*
+岛屿的个数
+给定一个由 '1'（陆地）和 '0'（水）组成的的二维网格，计算岛屿的数量。一个岛被水包围，并且它是通过水平方向或垂直方向上相邻的陆地连接而成的。你可以假设网格的四个边均被水包围。
+
+示例 1:
+
+输入:
+11110
+11010
+11000
+00000
+
+输出: 1
+示例 2:
+
+输入:
+11000
+11000
+00100
+00011
+
+输出: 3
+// dfs 
+*/
+class Solution
+{
+  public:
+    int numIslands(vector<vector<char>> &grid)
+    {
+        int result = 0;
+        for (int i = 0; i < grid[0].size(); i++)
+        {
+            for (int j = 0; j < grid.size(); j++)
+            {
+                if (grid[i][j] != 0 && visted[i][j] != 0)
+                {
+                    visted[i][j] = 1;
+                    dfs(grid, i, j);
+                    result++;
+                }
+            }
+        }
+        return result;
+    }
+
+  private:
+    int dir[4][2] = {
+        {1, 0},
+        {0, 1},
+        {-1, 0},
+        {0, -1}};
+
+    int visted[1000][1000] = {0};
+
+    bool check(vector<vector<char>> &grid, int i, int j)
+    {
+        if (i < 0 || i > grid[0].size() - 1 || j < 0 || j > grid.size() - 1)
+            return false;
+        if (visted[i][j] == 1)
+            return false;
+        if (grid[i][j] != 1)
+            return false;
+        return true;
+    }
+    void dfs(vector<vector<char>> &grid, int x, int y)
+    {
+        for (int i = 0; i < 4; i++)
+        {
+            int xx = x + dir[i][0];
+            int yy = y + dir[i][1];
+            if (check(grid, xx, yy))
+            {
+                visted[xx][yy] = 1;
+                dfs(grid, xx, yy);
+            }
+        }
     }
 };
