@@ -421,14 +421,22 @@ class Solution
   public:
     int numIslands(vector<vector<char>> &grid)
     {
+        auto row = grid.size();
+        if (row <= 0)
+            return 0;
+        auto col = grid[0].size();
+
+        vector<vector<bool>> temp_visted(row, vector<bool>(col, false));
+        visted = temp_visted;
+
         int result = 0;
-        for (int i = 0; i < grid[0].size(); i++)
+        for (int i = 0; i < row; i++)
         {
-            for (int j = 0; j < grid.size(); j++)
+            for (int j = 0; j < col; j++)
             {
-                if (grid[i][j] != 0 && visted[i][j] != 0)
+                if (visted[i][j] == false && grid[i][j] == '1')
                 {
-                    visted[i][j] = 1;
+                    visted[i][j] = true;
                     dfs(grid, i, j);
                     result++;
                 }
@@ -444,15 +452,16 @@ class Solution
         {-1, 0},
         {0, -1}};
 
-    int visted[1000][1000] = {0};
+    vector<vector<bool>> visted;
 
     bool check(vector<vector<char>> &grid, int i, int j)
     {
-        if (i < 0 || i > grid[0].size() - 1 || j < 0 || j > grid.size() - 1)
+        //i 行　  j 列
+        if (i < 0 || i >= grid.size() || j < 0 || j >= grid[0].size())
             return false;
-        if (visted[i][j] == 1)
+        if (visted[i][j] == true)
             return false;
-        if (grid[i][j] != 1)
+        if (grid[i][j] == '0') //注意是字符，我就坑在了这里
             return false;
         return true;
     }
@@ -464,7 +473,7 @@ class Solution
             int yy = y + dir[i][1];
             if (check(grid, xx, yy))
             {
-                visted[xx][yy] = 1;
+                visted[xx][yy] = true;
                 dfs(grid, xx, yy);
             }
         }

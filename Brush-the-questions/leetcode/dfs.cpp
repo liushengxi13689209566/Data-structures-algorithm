@@ -20,18 +20,19 @@ class Solution
     int numIslands(vector<vector<char>> &grid)
     {
         auto row = grid.size();
+        if (row <= 0)
+            return 0;
         auto col = grid[0].size();
 
-        vector<bool> temp(col, false);
-        vector<vector<bool>> temp_visted(row, temp);
+        vector<vector<bool>> temp_visted(row, vector<bool>(col, false));
         visted = temp_visted;
 
         int result = 0;
-        for (int i = 0; i < grid[0].size(); i++)
+        for (int i = 0; i < row; i++)
         {
-            for (int j = 0; j < grid.size(); j++)
+            for (int j = 0; j < col; j++)
             {
-                if (visted[i][j] == false && grid[i][j] == 1)
+                if (visted[i][j] == false && grid[i][j] == '1')
                 {
                     visted[i][j] = true;
                     dfs(grid, i, j);
@@ -53,11 +54,12 @@ class Solution
 
     bool check(vector<vector<char>> &grid, int i, int j)
     {
-        if (i < 0 || i >= grid[0].size() || j < 0 || j >= grid.size())
+        //i 行　  j 列
+        if (i < 0 || i >= grid.size() || j < 0 || j >= grid[0].size())
             return false;
         if (visted[i][j] == true)
             return false;
-        if (grid[i][j] == 0)
+        if (grid[i][j] == '0') //注意是字符，我就坑在了这里
             return false;
         return true;
     }
