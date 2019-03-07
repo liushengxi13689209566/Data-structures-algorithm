@@ -26,35 +26,42 @@
 解释: 你可以分别给这三个孩子分发 1、2、1 颗糖果。
      第三个孩子只得到 1 颗糖果，这已满足上述两个条件。 */
 
-#include<iostream>
-#include<vector>
+/**
+#include <iostream>
+#include <vector>
 using namespace std;
-class Solution {
-public:
-    int candy(vector<int>& rat) {
+class Solution
+{
+  public:
+    int candy(vector<int> &rat)
+    {
         //贪心
-        int len =  rat.size();
-        vector<int> candy(len,1);
-        candy[0]=1;
-        for(int i=0 ;i< len-1 ;i++){
-            if(rat[i+1] > rat[i] )
-                candy[i+1] =candy[i]+1; 
+        int len = rat.size();
+        vector<int> candy(len, 1);
+        candy[0] = 1;
+        for (int i = 0; i < len - 1; i++)
+        {
+            if (rat[i + 1] > rat[i])
+                candy[i + 1] = candy[i] + 1;
         }
         //逆着贪心
-        for(int i=len-1 ;i > 0;i--){
-            if(rat[i-1] > rat[i] && candy[i-1] <=candy[i])
-                candy[i-1] = candy[i]+1; 
+        for (int i = len - 1; i > 0; i--)
+        {
+            if (rat[i - 1] > rat[i] && candy[i - 1] <= candy[i])
+                candy[i - 1] = candy[i] + 1;
         }
-        int result = 0 ;
-        for(auto i:candy)
-            result+=i;
+        int result = 0;
+        for (auto i : candy)
+            result += i;
         return result;
     }
 };
 
-int main(void){
-    Solution  s1 ; 
-    vector<int> v{1,2,3,4,3,2,1,0};
-    std:cout << s1.candy(v) << std::endl ;
+int main(void)
+{
+    Solution s1;
+    vector<int> v{1, 2, 3, 4, 3, 2, 1, 0};
+    std::cout << s1.candy(v) << std::endl;
     return 0;
 }
+*/
