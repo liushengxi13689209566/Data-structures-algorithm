@@ -24,29 +24,15 @@ using namespace std;
 int main()
 {
     int t;
-    int cao, count = 1;
+    int cao;
     cin >> t; // 3
     while (t--)
     {
-        count = 1;
         cin >> cao; // 1 2 3
-        cao = cao % 4;
-        if (cao == 1)
-        {
-            cout << "niu" << endl;
-        }
-        if (cao == 2)
-        {
+        //为是4的幂，所以找规律，发现是5个一循环，羊牛羊牛牛
+        if (cao % 5 == 0 || cao % 5 == 2)
             cout << "yang" << endl;
-        }
-        if (cao == 3)
-        {
+        else
             cout << "niu" << endl;
-        }
-        if (cao == 0)
-        {
-            cout << "niu" << endl;
-        }
     }
-    //4的幂
 }

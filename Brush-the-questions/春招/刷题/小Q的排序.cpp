@@ -29,13 +29,34 @@ using namespace std;
 int main()
 {
     int n;
-    vector<int> vv;
-    int temp;
+    int temp, bef;
     cin >> n;
+    int min, max;
+    vector<int> vv;
+    bool tag = false;
+    cin >> temp;
+    min = max = bef = temp;
+    vv.push_back(temp);
+    n--;
     while (n--)
     {
+        bef = temp;
         cin >> temp;
+        if (temp < bef)
+            tag = true;
         vv.push_back(temp);
+        if (temp > max)
+            max = temp;
+        if (temp < min)
+            min = temp;
     }
-    cout << "2" << endl;
+    // cout << tag << ": " << min << ":" << max << endl;
+    if (!tag) //已经升序了
+        cout << "0" << endl;
+    else if (vv[0] == min && vv[vv.size() - 1] == max) //两个都在正确位置
+        cout << "1" << endl;
+    else if (vv[0] == min || vv[vv.size() - 1] == max) //只有一个在正确位置
+        cout << "1" << endl;
+    else //两个都不在正确位置
+        cout << "2" << endl;
 }
