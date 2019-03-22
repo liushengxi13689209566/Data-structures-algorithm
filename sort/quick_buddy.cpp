@@ -13,13 +13,19 @@ using namespace std;
 /*void buddySort(vector<int> &vv)
 {
     auto count = vv.size();
+    bool  tag  =  false;
     for (int i = 0; i < count; i++)
     {
+        tag  =  false;
         for (int j = 0; j < count - i - 1; j++)
         {
-            if (vv[j] > vv[j + 1])
+            if (vv[j] > vv[j + 1]){
                 std::swap(vv[j], vv[j + 1]);
+                tag = true ;// 表示有数据交换
+
+            }
         }
+        if(!tag)  break;//没有数据交换，提前退出
     }
 }
 void xuanSort(vector<int> &vv)
@@ -39,7 +45,7 @@ int partion(vector<int> &vv, int l, int r)
 {
     int k = l;
     int mid = vv[r];
-    for (int i = l; i < r; i++)           
+    for (int i = l; i < r; i++)
     {
         if (vv[i] <= mid)
             std::swap(vv[i], vv[k++]);
@@ -68,4 +74,3 @@ int main(void)
     for (auto i : vv)
         cout << i << endl;
 }
-
