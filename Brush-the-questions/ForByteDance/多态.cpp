@@ -33,31 +33,52 @@ class base
 public:
     base()
     {
-        fun();
     }
     virtual void fun()
     {
-        cout << " base 的普通虚函数 " << endl;
+        cout << " base  fun () 的普通虚函数 " << endl;
     }
     ~base()
     {
         cout << "~ base" << endl;
     }
 };
-class derived : public base
+class B : public base
 {
 public:
-    derived() {}
+    B() {}
     void fun()
     {
-        cout << " dervied 的普通虚函数 " << endl;
+        cout << " B 的普通虚函数 " << endl;
     }
-    ~derived()
+    ~B()
     {
-        cout << "~ derived" << endl;
+        cout << "~ B" << endl;
     }
 };
+class C : public base
+{
+public:
+    C() {}
+    void fun()
+    {
+        cout << " C 的普通虚函数 " << endl;
+    }
+    ~C()
+    {
+        cout << "~ C" << endl;
+    }
+};
+int do_something(base *bb)
+{
+    bb->fun();
+}
 int main()
 {
-    derived dd;
+    B bb;
+    do_something(&bb);
+
+    C cc;
+    do_something(&cc);
+    return 0;
 }
