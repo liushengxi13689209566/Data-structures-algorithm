@@ -105,3 +105,4 @@ private:
 	vector<vector<TreeNode *>> paths;
 	vector<TreeNode *> path;
 };
+int *p = new int();
