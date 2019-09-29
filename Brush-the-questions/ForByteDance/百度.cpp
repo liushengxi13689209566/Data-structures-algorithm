@@ -62,3 +62,75 @@ int main()
     cout << count << endl;
     return 0;
 }
+
+//后台开发
+1.
+2. 
+
+#include <iostream>
+#include <string>
+#include <map>
+#include <vector>
+#include <bitset>
+#include <algorithm>
+#include <utility>
+#include <queue>
+#include <bitset>
+using namespace std;
+int main(void)
+{
+    const int MAX = 10e5 + 10;
+    int t;
+    int a[MAX];
+    cin >> t;
+    while (t--)
+    {
+        int n, temp;
+        cin >> n;
+
+        for (int i = 0; i < n; i++)
+        {
+            cin >> a[i];
+        }
+        sort(a, a + n);
+        int two = 0;
+        int three = 0;
+        for (int i = 0; i < n - 2; ++i)
+        {
+            if (a[i] == a[i + 1] && a[i + 1] == a[i + 2])
+            {
+                three = 1;
+                break;
+            }
+        }
+        if (three == 1)
+        {
+            cout << "woman\n";
+            continue;
+        }
+        for (int i = 0; i < n - 1; ++i)
+        {
+            if (a[i] == a[i + 1])
+            {
+                two++;
+            }
+        }
+        if (two > 1)
+        {
+            cout << "woman\n";
+            continue;
+        }
+        long long sum = 0;
+        long long sum2 = 0;
+        for (int i = 0; i < n; i++)
+            sum += a[i];
+        for (int i = 0; i < n; ++i)
+            sum2 += i;
+        sum = sum - sum2;
+        if (sum % 2 == 0)
+            cout << "woman\n";
+        else
+            cout << "man\n";
+    }
+    return 0;
+}
