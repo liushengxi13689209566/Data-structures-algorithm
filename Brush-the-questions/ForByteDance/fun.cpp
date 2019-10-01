@@ -1,5 +1,6 @@
 #include <iostream>
 #include <string>
+#include <sstream>
 #include <map>
 #include <vector>
 #include <bitset>
@@ -12,44 +13,27 @@
 #include <unordered_map>
 using namespace std;
 
-/**
- * Definition for a binary tree node.
- * struct TreeNode {
- *     int val;
- *     TreeNode *left;
- *     TreeNode *right;
- *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
- * };
- */
 class Solution
 {
 public:
-    vector<vector<int>> levelOrder(TreeNode *root)
+    template <typename T> //摘自 std::reverse
+    void reverseFun(T frist, T last)
     {
-        vector<vector<int>> res;
-        if (!root)
-            return res;
-
-        std::queue<TreeNode *> QQ;
-        QQ.push(root);
-
-        while (!QQ.empty())
+        while ((frist != last) && (frist != --last))
         {
-            int count = QQ.size();
-            vector<int> vv;
-            for (int i = 0; i < count; i++)
-            {
-                auto tmp = QQ.front();
-                vv.push_back(tmp->val);
-                QQ.pop();
-
-                if (tmp->left)
-                    QQ.push(tmp->left);
-                if (tmp->right)
-                    QQ.push(tmp->right);
-            }
-            res.push_back(vv);
+            std::iter_swap(frist++, last);
         }
-        return res;
+    }
+    string LeftRotateString(string str, int n)
+    {
+        if (str.size() <= 0)
+            return str;
+        if (n == 0)
+            return str;
+        reverseFun(str.begin(), str.begin() + n);
+        reverseFun(str.begin() + n, str.end());
+        reverseFun(str.begin(), str.end());
+
+        return str;
     }
 };
