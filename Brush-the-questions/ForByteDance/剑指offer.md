@@ -480,9 +480,132 @@ public:
     }
 };
 ```
+### 2. 数组中出现次数超过一半的数字
+数组中有一个数字出现的次数超过数组长度的一半，请找出这个数字。例如输入一个长度为9的数组{1,2,3,2,2,2,5,4,2}。由于数字2在数组中出现了5次，超过数组长度的一半，因此输出2。如果不存在则输出0。
 
+思路：
 
+- 1.hash_map 辅助，数字作为key。出现的次数作为 value 。时间 O(n)，空间 O(n)《略》
+- 2.基于Partition 函数的算法。时间O(n)，空间O(1)。但会修改输入输入数组！！！
+- 3.根据数组特点找出O(n)的算法（数学）。
 
+2.基于 Partition 函数的算法。`由于该数字出现的次数超过数组的一半，所以如果我们将数组排序，那么位于最中间的数字就是我们要找的数字啦！`也就是说`该数字是第n/2大的数字`啦。
+```cpp
+//方法二
+class Solution
+{
+public:
+    int partition(vector<int> &vv, int l, int r)
+    {
+        int k = l, pivot = vv[r];
+        for (int i = l; i < r; i++)
+        {
+            if (vv[i] <= pivot)
+                std::swap(vv[k++], vv[i]);
+        }
+        std::swap(vv[k], vv[r]);
+        return k;
+    }
+    int MoreThanHalfNum_Solution(vector<int> numbers)
+    {
+        int len = numbers.size();
+
+        if (len < 1)
+            return 0;
+
+        int left = 0;
+        int right = len - 1;
+        int k = partition(numbers, left, right);
+        while (k != len / 2)
+        {
+            if (k < len / 2)
+            {
+                left = k + 1;
+                k = partition(numbers, left, right);
+            }
+            else if (k > len / 2)
+            {
+                right = k - 1;
+                k = partition(numbers, left, right);
+            }
+        }
+        int time = 0;
+        for (auto it : numbers)
+        {
+            if (it == numbers[k])
+            {
+                time++;
+            }
+        }
+        //数组中出现次数超过一半
+        if (time > len / 2)
+            return numbers[k];
+        else
+            return 0;
+    }
+};
+```
+3.如果有一个数字出现的次数超过了数组的一半，比剩余的其他数字出现的次数的和都要大。因此：
+
+-  我们可以在遍历数组的时候记录两个值：
+1. 数组中的数字;
+2. 次数。
+- 遍历下一个数字时，若它与之前保存的数字相同，则次数加1，否则次数减1；若次数为0，则保存下一个数字，并将次数置为1。遍历结束后，所保存的数字即为所求。最后再判断它是否符合条件。
+
+```cpp
+class Solution
+{
+public:
+    int MoreThanHalfNum_Solution(vector<int> numbers)
+    {
+        int len = numbers.size();
+
+        if (len < 1)
+            return 0;
+        int value = numbers[0];
+        int count = 1;
+        for (int i = 1; i < len; i++)
+        {
+            if (numbers[i] == value)
+                count++;
+            else
+                count--;
+            if (count == 0)
+            {
+                value = numbers[i];
+                count = 1;
+            }
+            printf("num[%d]  ==  %d ,value == %d ,count == %d \n", i, numbers[i], value, count);
+        }
+        //检查找出的这个数是不是出现的次数超过一半
+        int time = 0;
+        for (auto it : numbers)
+        {
+            if (it == value)
+            {
+                time++;
+            }
+        }
+        //数组中出现次数超过一半
+        if (time > len / 2)
+            return value;
+        else
+            return 0;
+    }
+};
+int main()
+{
+    Solution s1;
+    cout << s1.MoreThanHalfNum_Solution({1, 2, 3, 2, 2, 2, 5, 4, 2}) << endl;
+    cout << "vffelvnfdknkfnvknfb\n\n\n\n";
+
+    cout << s1.MoreThanHalfNum_Solution({1, 2, 3, 2, 4, 2, 5, 2, 3}) << endl;
+}
+```
+![在这里插入图片描述](https://img-blog.csdnimg.cn/20191001113114942.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2xpdXNoZW5neGlfcm9vdA==,size_16,color_FFFFFF,t_70)
+
+### 3. 
+### 4. 
 # 字符串
 ### 1.替换空格
 请实现一个函数，将一个字符串中的每个空格替换成“%20”。例如，当字符串为We Are Happy.则经过替换之后的字符串为We%20Are%20Happy。
@@ -567,6 +690,43 @@ public:
 
 [https://leetcode-cn.com/problems/merge-sorted-array/](https://leetcode-cn.com/problems/merge-sorted-array/)
 
+### 2. 书写一个upCase函数
+```cpp
+char *upCase(const char *str) //const 属性
+{
+    cout << *str << endl;
+
+    char *ret = new char(strlen(str) + 1); 
+    //strlen 开头和终止空字符之间的字符数（不包括终止空字符‘\0’本身）.
+    char *tmp = ret;
+    
+    while (*str)
+    {
+        cout << *str << " ";
+        if (*str >= 'a' && *str <= 'z')
+            *tmp = *str - 32;
+        else
+            *tmp = *str;
+        str++;
+        tmp++;
+    }
+    cout << endl;
+    *tmp = '\0'; //需要调整以满足字符串的格式
+
+    return ret;
+}
+int main()
+{
+    char str[] = "liu shE4ng xi!!!";
+    cout << str << endl;
+
+    cout << upCase(str) << endl;
+    return 0;
+}
+```
+![在这里插入图片描述](https://img-blog.csdnimg.cn/20190929222208262.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2xpdXNoZW5neGlfcm9vdA==,size_16,color_FFFFFF,t_70)
+### 3.
+### 4.
 # 链表 
 ### 1.链表的逆置
 > `当打算修改输入的数据时，最好问清面试官是否可以！！！`
@@ -757,6 +917,59 @@ public:
 ### 4.合并两个排序的链表 
 ### 5.两个链表的第一个公共节点
 ### 6.环形链表（圆圈中最后剩下的数字）
+- 约瑟夫环的问题。时间复杂度O(MN),空间复杂度O(N)
+```cpp
+class Solution
+{
+public:
+    int LastRemaining_Solution(int n, int m)
+    {
+        if (n < 1 || m < 1)
+            return -1;
+
+        std::list<int> ll;
+        for (int i = 0; i < n; i++)
+            ll.push_back(i);
+
+        auto it = ll.begin();
+        while (ll.size() != 1)
+        {
+            for (int i = 0; i < m - 1; i++)
+            {
+                it++;
+                if (it == ll.end())
+                    it = ll.begin();
+            }
+            //删除 第  m  个
+            auto tmp = it;
+            it++;
+            if (it == ll.end())
+                it = ll.begin();
+            ll.erase(tmp);
+        }
+        return *it;
+    }
+};
+```
+- 经过上面复杂的分析，我们终于找到了一个递归公式。`要得到n个数字的序列中最后剩下的数字，只需要得到n-1个数字的序列中最后剩下的数字，并以此类推`。当n=1时，也就是序列中开始只有-一个数字0,那么很显然最后剩下的数字就是0。我们把这种关系表示为:
+![在这里插入图片描述](https://img-blog.csdnimg.cn/20190929232138832.png)
+时间复杂度O(n)，空间复杂度O(1)
+```cpp
+class Solution
+{
+public:
+    int LastRemaining_Solution(int n, int m)
+    {
+        if (n < 1 || m < 1)
+            return -1;
+            
+        int last = 0;
+        for (int i = 2; i <= n; i++)
+            last = (last + m) % i;
+        return last;
+    }
+};
+```
 ### 7.二叉搜索树与双向链表
 输入一棵二叉搜索树，将该二叉搜索树转换成一个排序的双向链表。要求不能创建任何新的结点，只能调整树中结点指针的指向。
 思路：
@@ -875,6 +1088,12 @@ public:
 };
 ```
 # 树
+### 0.树三种递归&&非递归遍历&&层次遍历
+
+[二叉树基本数学知识，建立及三种递归遍历](https://blog.csdn.net/liushengxi_root/article/details/78536175)
+
+[二叉树的三种非递归遍历和层次遍历](https://blog.csdn.net/liushengxi_root/article/details/78588197)
+
 ###  1.重建二叉树
 输入某二叉树的前序遍历和中序遍历的结果，请重建出该二叉树。假设输入的前序遍历和中序遍历的结果中都不含重复的数字。例如输入前序遍历序列{1,2,4,7,3,5,6,8}和中序遍历序列{4,7,2,1,5,3,8,6}，则重建二叉树并返回。
 
@@ -1032,18 +1251,143 @@ public:
 
 ###  5.二叉树的后序遍历序列
 ###  6.从上到下遍历二叉树
-### 8.树中两个节点的最低公共祖先
+### 8.树中两个节点的最近公共祖先 lowest-common-ancestor问题
+#####  (1) 树是二叉搜索树
+思路就是如果两个节点都比当前的节点大，那么最近公共祖先一定在右子树。
+如果两个节点都比当前的节点小，那么最近公共祖先一定在左子树。
+否则当前节点就是所需要的节点。
+时间O(n)，空间O(n)
+```cpp
+class Solution
+{
+public:
+    TreeNode *lowestCommonAncestor(TreeNode *root, TreeNode *p, TreeNode *q)
+    {
+        if (!root || !p || !q)
+            return nullptr;
+            
+        if (root->val > std::max(p->val, q->val))
+            return lowestCommonAncestor(root->left, p, q);
+        else if (root->val < std::min(p->val, q->val))
+            return lowestCommonAncestor(root->right, p, q);
+        else
+            return root;
+    }
+};
+```
+##### (2)  树是普通的二叉树
+思路 1：
+- 在左、右子树中分别查找是否包含p或q：
+- 如果以下两种情况（左子树包含p，右子树包含q/左子树包含q，右子树包含p），那么此时的根节点就是最近公共祖先
+- 如果左子树包含p和q，那么到root->left中继续查找，最近公共祖先在左子树里面
+- 如果右子树包含p和q，那么到root->right中继续查找，最近公共祖先在右子树里面
+
+```cpp
+class Solution {
+public:
+    TreeNode* lowestCommonAncestor(TreeNode* root, TreeNode* p, TreeNode* q) {
+        if(!root || p ==  root || q == root )
+            return root ;
+        
+        TreeNode* left_lca = lowestCommonAncestor(root->left,p,q);
+        TreeNode* right_lca = lowestCommonAncestor(root->right,p,q);
+        
+        if(left_lca && right_lca )
+                return root;
+        
+        return left_lca ? left_lca : right_lca;
+    }
+};
+```
+思路 2：（`适用于普遍的树，不只是二叉树`）
+
+用两个容器 ，保存从根节点到输入的两个节点的路径，然后把问题转换成求两个链表的最后最后公共节点。时间复杂度O(logn) ，空间复杂度O(logn)
+
+```cpp
+class Solution
+{
+    vector<vector<TreeNode *>> paths;
+    vector<TreeNode *> path;
+
+public:
+    TreeNode *lowestCommonAncestor(TreeNode *root, TreeNode *p, TreeNode *q)
+    {
+        if (!root || !p || !q)
+            return nullptr;
+        if (p == q)
+            return p;
+
+        dfs(root, p, q); //dfs 找到两条路径
+        // 去找最后相同的一个数字即可
+        if (paths.size() != 2)
+            return nullptr;
+
+        int idx = 0;
+        while (idx < paths[0].size() && idx < paths[1].size() && paths[0][idx]->val == paths[1][idx]->val)
+        {
+            idx++;
+        }
+        return paths[0][idx - 1];
+    }
+private:
+    void dfs(TreeNode *root, TreeNode *p, TreeNode *q)
+    {
+        if (!root)
+            return;
+        path.push_back(root);
+
+        if (root == p || root == q)
+            paths.push_back(path);
+
+        if (root->left)
+            dfs(root->left, p, q);
+        if (root->right)
+            dfs(root->right, p, q);
+
+        path.pop_back();
+    }
+};
+```
+#####  (3) 树的节点中存在指向父节点的指针
+
+思路：通过所给的节点去逆着将每个节点串联起来，直到到达根节点。然后就是找两个链表的公共节点的问题。时间复杂度O(n)。空间复杂度O(n)
+
 ### 9.二叉搜索树与双向链表
-### 10.求最小的k个数字与求第k小的数字  
+
+### 10.求最小的k个数字与求第k小的数字的问题
+
 # 栈和队列
 ### 1.栈的压入、弹出序列 
 输入两个整数序列，第一个序列表示栈的压入顺序，请判断第二个序列是否可能为该栈的弹出顺序。假设压入栈的所有数字均不相等。例如序列1,2,3,4,5是某栈的压入顺序，序列4,5,3,2,1是该压栈序列对应的一个弹出序列，但4,3,5,1,2就不可能是该压栈序列的弹出序列。（注意：这两个序列的长度是相等的）
 
 思路：
 
-- 
+- 将 pushed 队列中的每个数都 push 到栈中，同时检查这个数是不是 popped 序列中下一个要 pop 的值，如果是就把它 pop 出来。
+
+最后，检查不是所有的该 pop 出来的值都是 pop 出来了。时间复杂度O(n)，空间复杂度O(n)
 
 ```cpp
+class Solution {
+public:
+    bool validateStackSequences(vector<int>& pushV, vector<int>& popV) {
+        if (pushV.empty() || popV.empty() || pushV.size() != popV.size())
+            return true;
+        std::stack<int> QQ;
+        int index = 0;
+        // 遍历的是 push 序列
+        for (const auto &it : pushV)
+        {
+            QQ.push(it);
+            //栈不空  数组下标不越界 （如果不相等就继续把 push 序列的数字压入栈中）
+            while (!QQ.empty() && index < pushV.size() && QQ.top() == popV[index])
+            {
+                QQ.pop();
+                index++;
+            }
+        }
+        return index == pushV.size();
+    }
+};
 ```
 # 位运算
 # 动态规划和贪心
@@ -1112,7 +1456,7 @@ public:
 ### 1.两数之和
 思路：
 
-- 哈希表维护 数值到下标的映射。时间O(n),空间O(n)
+- 哈希表维护 数值到下标的映射。时间O(n)，空间O(n)
 ```cpp
 class Solution
 {
@@ -1209,11 +1553,116 @@ Target = 9
 
 - 3.BST 查找法
 
+时间复杂度 O(NlogN)，空间复杂度 O(1) 
+
 ```cpp
-
+class Solution
+{
+public:
+    TreeNode *findNum(TreeNode *root, int num)
+    {
+        if (root == nullptr)
+            return nullptr;
+        if (root->val == num)
+            return root;
+        else if (root->val > num)
+            return findNum(root->left, num);
+        else
+            return findNum(root->right, num);
+    }
+    bool fun(TreeNode *node, TreeNode *root, int k) // O(n)
+    {
+        if (node == nullptr)
+            return false;
+        TreeNode *p = findNum(root, k - root->val); // O(logN)
+        if (p == nullptr || p == node)
+            return fun(node->left, root, k) || fun(node->right, root, k);
+        else
+            return true;
+    }
+    bool findTarget(TreeNode *root, int k)
+    {
+        if (root == nullptr)
+            return false;
+        return fun(root, root, k);
+    }
+};
 ```
-### 4.
+### 4.三数之和
+给定一个包含 n 个整数的数组 nums，判断 nums 中是否存在三个元素 a，b，c ，使得 a + b + c = 0 ？找出所有满足条件且不重复的三元组。
 
+注意：答案中不可以包含重复的三元组。
+
+例如, 给定数组 nums = [-1, 0, 1, 2, -1, -4]，
+
+满足要求的三元组集合为：
+[
+  [-1, 0, 1],
+  [-1, -1, 2]
+]
+
+来源：力扣（LeetCode）
+链接：https://leetcode-cn.com/problems/3sum
+![在这里插入图片描述](https://img-blog.csdnimg.cn/20190929201041215.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2xpdXNoZW5neGlfcm9vdA==,size_16,color_FFFFFF,t_70)
+```cpp
+class Solution
+{
+public:
+    vector<vector<int>> threeSum(vector<int> &nums)
+    {
+        vector<vector<int>> result;
+        int len = nums.size();
+        if (len < 3)
+            return result;
+
+        sort(nums.begin(), nums.end()); //先转换成有序向量
+
+        for (int i = 0; i < len; ++i)
+        {
+            if (nums[i] > 0)
+                break; // 如果当前数字大于0，则三数之和一定大于0，所以结束循环
+            if (i > 0 && nums[i] == nums[i - 1])
+                continue; //去重
+
+            int L = i + 1;
+            int R = len - 1;
+
+            while (L < R)
+            {
+                int sum = nums[i] + nums[L] + nums[R]; //转换成两数之和的问题
+                if (sum == 0)
+                {
+                    result.push_back({nums[i], nums[L++], nums[R--]});
+                    while (L < R && nums[L] == nums[L - 1])
+                        L++; //L跳过重复元素
+                    while (L < R && nums[R] == nums[R + 1])
+                        R--; //R跳过重复元素
+                }
+                else if (sum > 0)
+                    R--; //sum(两数和)较大时，R左移
+                else
+                    L++; //sum 较小时，L右移
+            }
+        }
+        return result;
+    }
+};
+```
+
+- 拓展：
+最接近的三数之和
+中等
+四数之和
+中等
+较小的三数之和
+
+# 发散思维题以及单例的实现
+### 1.使用C++实现单例
+[C++如何实现单例模式？](https://blog.csdn.net/liushengxi_root/article/details/79333246)
+
+### 2.
+
+### 3.
 
 
 
