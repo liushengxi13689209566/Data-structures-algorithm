@@ -725,8 +725,224 @@ int main()
 }
 ```
 ![在这里插入图片描述](https://img-blog.csdnimg.cn/20190929222208262.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2xpdXNoZW5neGlfcm9vdA==,size_16,color_FFFFFF,t_70)
-### 3.
-### 4.
+### 3. leetcode151. 翻转字符串里的单词
+给定一个字符串，逐个翻转字符串中的每个单词。
+示例 1：
+输入: "the sky is blue"
+输出: "blue is sky the"
+
+示例 2：
+输入: "  hello world!  "
+输出: "world! hello"
+解释: 输入字符串可以在前面或者后面包含多余的空格，但是反转后的字符不能包括。
+
+示例 3：
+输入: "a good   example"
+输出: "example good a"
+解释: 如果两个单词间有多余的空格，将反转后单词间的空格减少到只含一个。
+ 
+说明：
+无空格字符构成一个单词。
+输入字符串可以在前面或者后面包含多余的空格，但是反转后的字符不能包括。
+如果两个单词间有多余的空格，将反转后单词间的空格减少到只含一个。
+ 
+进阶：
+
+请选用 C 语言的用户尝试使用 O(1) 额外空间复杂度的原地解法。
+
+链接：[https://leetcode-cn.com/problems/reverse-words-in-a-string](https://leetcode-cn.com/problems/reverse-words-in-a-string)
+
+注意这道题有很多的坑点需要注意：
+
+1. 中间有很多空格 
+2. 前后有空格
+3. 字符串输入为空，字符串输入只有空格。
+
+思路：
+
+- 1.直接利用 stringstream 提取单词，利用 string 的 + 号逆序添加。（非原地算法）
+- 2.上面的算法主要耗时点在逆序插入上。那么我们给他变成顺序插入看看。(非原地算法)
+- 3.就是剑指offer上面的做法 。先逆转整个字符串，然后逆转每一个单词。(原地算法)
+
+直接利用 stringstream 提取单词，利用 string 的 + 号（insert也一样）逆序添加。
+```cpp
+class Solution
+{
+public:
+    string reverseWords(string s)
+    {
+        string ans, str;
+        stringstream ss(s);
+
+        ss >> str;
+        ans.insert(0, str);  //特殊处理第一个单词
+
+        while (ss >> str)
+            ans.insert(0, str + " ");//最主要的耗时也在这里 👩‍❤️‍👩
+            
+        return ans.size() ? ans : "";
+    }
+};
+```
+变成顺序插入看看。(非原地算法)
+```cpp
+class Solution
+{
+public:
+    string reverseWords(string s)
+    {
+        string ans, tmp;
+        stringstream ss(s);
+        vector<string> vv;
+
+        while (ss >> tmp)
+            vv.push_back(tmp); //全部流入 vector 容器中
+
+        //处理 字符串输入为空，字符串输入只有空格 的情况
+        if (vv.size() < 1)
+            return ans;
+
+        for (int i = vv.size() - 1; i > 0; i--)
+        {
+            ans += vv[i] + " ";
+        }
+        //特殊处理 最终放置在 尾部 的单词
+        ans += vv[0];
+
+        return ans.size() ? ans : "";
+    }
+};
+//虽然我是这样写的，但是我觉得如下这样写是看起来最简洁明了的代码。上面一个解法也是一样。
+class Solution
+{
+public:
+    string reverseWords(string s)
+    {
+        string ans, tmp;
+        stringstream ss(s);
+        vector<string> vv;
+        
+        while (ss >> tmp)
+            vv.push_back(tmp); //全部流入 vector 容器中
+            
+        for (int i = vv.size() - 1; i >= 0; i--)
+        {
+            ans += vv[i] + " ";
+        }
+        return ans.size() ? string(ans.begin(), ans.end() - 1) : "";
+        //去掉多加的一个空格
+    }
+};
+```
+剑指offer上面的做法 。先逆转整个字符串，然后逆转每一个单词。(原地算法)，剑指offer上面的输入中间是没有多个空格的。
+```cpp
+class Solution
+{
+public:
+    template <typename T> //摘自 std::reverse
+    void reverseFun(T frist, T last)
+    {
+        while ((frist != last) && (frist != --last))
+        {
+            std::iter_swap(frist++, last);
+        }
+    }
+    string reverseWords(string s)
+    {
+        if (s.size() <= 0)
+            return s;
+
+        reverseFun(s.begin(), s.end()); //翻转整体
+
+        int start = 0, end = s.size() - 1;
+        while (s[start] == ' ' && start <= end)
+            start++;
+
+        while (s[end] == ' ' && end >= start)
+            end--;
+
+        if (start > end)
+        {
+            return s; //特殊情况即字符串全为空字符
+        }
+
+        // 翻转中间的单词
+        for (int i = start; i <= end; i++)
+        {
+            while (s[i] == ' ' && i <= end)
+            {
+                i++;
+            }
+
+            int l = i;
+            while (s[i] != ' ' && i <= end)
+            {
+                i++;
+            }
+            reverseFun(s.begin() + l, s.begin() + i);
+        }
+        // 处理中间部分多 🐟 的空格
+        int tail = start;
+        for (int i = start; i <= end; i++)
+        {
+            if (s[i] == ' ' && s[i + 1] == ' ')
+            {
+                continue;
+            }
+            s[tail++] = s[i];
+        }
+        return s.substr(start, tail - start);
+    }
+};
+```
+### 4.左旋转字符串
+对于一个给定的字符序列S，请你把其循环左移K位后的序列输出。例如，字符序列S=”abcXYZdef”,要求输出循环左移3位后的结果，即“XYZdefabc”。是不是很简单？OK，搞定它！
+
+这个思路还用说吗？
+
+```cpp
+class Solution
+{
+public:
+	string LeftRotateString(string str, int n)
+	{
+		if(str.size()<= 0)
+			return string();
+		if(n ==  0)
+			return str;
+		string tt = str.substr(0, n );
+		string rr = str.substr(n, str.size());
+		return rr + tt;
+	}
+};
+```
+emmmm，将abcXYZdef分为abc和其他。分别将他们翻转。得到cba fedZYX。然后再整体翻转得到 XYZdefabc，即为最终所求结果！！！时间O(n),空间O(1)
+```cpp
+class Solution
+{
+public:
+    template <typename T> //摘自 std::reverse
+    void reverseFun(T frist, T last)
+    {
+        while ((frist != last) && (frist != --last))
+        {
+            std::iter_swap(frist++, last);
+        }
+    }
+    string LeftRotateString(string str, int n)
+    {
+        if (str.size() <= 0)
+            return str;
+        if (n == 0)
+            return str;
+        reverseFun(str.begin(), str.begin() + n);
+        reverseFun(str.begin() + n, str.end());
+        reverseFun(str.begin(), str.end());
+        
+        return str;
+    }
+};
+```
 # 链表 
 ### 1.链表的逆置
 > `当打算修改输入的数据时，最好问清面试官是否可以！！！`
@@ -1452,6 +1668,74 @@ public:
 };
 ```
 - 分治法  时间O(nlogn)，空间O(1)
+
+### 2.剪绳子/切割杆的问题
+给你一根长度为n的绳子，请把绳子剪成m段（m、n都是整数，n>1并且m>1），每段绳子的长度记为k[0],k[1],...,k[m]。请问k[0]xk[1]x...xk[m]可能的最大乘积是多少？例如，当绳子的长度是8时，我们把它剪成长度分别为2、3、3的三段，此时得到的最大乘积是18。
+
+思路：
+- 贪心 / 动态规划
+
+动态规划：
+  设f(n)代表长度为n的绳子剪成若干段的最大乘积，如果第一刀下去，第一段长度是i，那么剩下的就需要剪n-i，那么 `f(n)=max{f(i)*f(n-i)}`。而f(n)的最优解对应着f(i)和f(n-i)的最优解，假如f(i)不是最优解，那么其最优解和f(n-i)乘积肯定大于f(n)的最优解，和f(n)达到最优解矛盾，`所以f(n)的最优解对应着f(i)和f(n-i)的最优解。`
+ 
+首先，剪绳子是最优解问题，其次，大问题包含小问题，并且大问题的最优解包含着小问题的最优解，所以可以使用动态规划求解问题，并且从小到大求解，把小问题的最优解记录在数组中，求大问题最优解时就可以直接获取，避免重复计算。
+
+  n<2时，由于每次至少减一次，所以返回0。n=2时，只能剪成两个1，那么返回1。n=3时，可以剪成3个1，或者1和2，那么最大乘积是2。当n>3时，就可以使用公式进行求解。
+```cpp
+    f(4)=max{f(1)f(3), f(2)f(2)}
+    f(5)=max{f(1)f(4), f(2)f(3)}`
+    ...
+    f(n)=max{f(1)f(n-1), f(2)f(n-2), f(3)f(n-3), ..., f(i)(fn-i), ...}
+```
+```cpp
+class Solution
+{
+public:
+    int cutRope(int n)
+    {
+        if (n < 2)
+            return 0;
+        if (n == 2)
+            return 1;
+        if (n == 3)
+            return 2;
+
+        vector<int> dp(n + 1, 0);
+        //数组中第i个元素表示 把长度为i的绳子剪成 若干段之后 各段长度乘积的最大值
+
+        dp[1] = 0;
+        dp[1] = 1;
+        dp[2] = 2;
+        dp[3] = 3;
+
+        for (int i = 4; i <= n; i++)
+        {
+            int Max = 0;
+            for (int j = 1; j <= i / 2; j++)
+            {
+                int product = dp[j] * dp[i - j];
+                if (product > Max)
+                    Max = product;
+            }
+            dp[i] = Max;
+        }
+        return dp[n];
+    }
+};
+```
+贪心：（需要一定的数学知识，暂时略）
+
+### 
+### 
+# 回溯法和DFS，BFS
+### 1.矩阵中的路径
+请设计一个函数，用来判断在一个矩阵中是否存在一条包含某字符串所有字符的路径。路径可以从矩阵中的任意一个格子开始，每一步可以在矩阵中向左，向右，向上，向下移动一个格子。如果一条路径经过了矩阵中的某一个格子，则该路径不能再进入该格子。 例如 a b c e s f c s a d e e 矩阵中包含一条字符串"bcced"的路径，但是矩阵中不包含"abcb"路径，因为字符串的第一个字符b占据了矩阵中的第一行第二个格子之后，路径不能再次进入该格子。
+
+思路：
+
+### 2.
+### 3.
+
 # k 数之和的问题
 ### 1.两数之和
 思路：
@@ -1648,7 +1932,57 @@ public:
     }
 };
 ```
+### 5.和为S的连续正数序列
+小明很喜欢数学,有一天他在做数学作业时,要求计算出9~16的和,他马上就写出了正确答案是100。但是他并不满足于此,他在想究竟有多少种连续的正数序列的和为100(至少包括两个数)。没多久,他就得到另一组连续正数和为100的序列:18,19,20,21,22。现在把问题交给你,你能不能也很快的找出所有和为S的连续正数序列? Good Luck!
 
+思路：
+
+- 同两数之和的双指针的思路。时间O(n)，空间最坏 O(n)
+
+```cpp
+class Solution
+{
+public:
+    vector<vector<int>> FindContinuousSequence(int sum)
+    {
+        vector<vector<int>> res;
+        if (sum < 3)
+            return res;
+
+        int small = 1;
+        int big = 2;
+
+        int curSum = small + big;
+
+        //当small > mid 时，自然就不会形成 == sum 的情况了
+        while (small <= sum / 2)
+        {
+            if (curSum > sum)
+            {
+                curSum -= small; //注意这里与下面的代码顺序不同
+                small++;
+            }
+            else if (curSum < sum)
+            {
+                big++;
+                curSum += big;
+            }
+            else
+            {
+                vector<int> tmp;
+                for (int i = small; i <= big; i++)
+                    tmp.push_back(i);
+                res.push_back(tmp);
+                tmp.clear();
+
+                big++;
+                curSum += big; //继续移动 big ,找下一个序列！！！
+            }
+        }
+        return res;
+    }
+};
+```
 - 拓展：
 最接近的三数之和
 中等
